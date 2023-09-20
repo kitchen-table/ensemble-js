@@ -1,3 +1,6 @@
 {
-  "name": "@packages/backend"
+  "name": "@packages/backend",
+  "scripts": {
+    "build": "tsc"
+  }
 }

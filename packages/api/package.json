@@ -1,3 +1,7 @@
 {
-  "name": "@packages/api"
+  "name": "@packages/api",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc --declaration"
+  }
 }

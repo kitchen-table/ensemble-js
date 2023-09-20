@@ -6,6 +6,7 @@
     "lint": "turbo run lint"
   },
   "dependencies": {
-    "turbo": "1.10.14"
+    "turbo": "1.10.14",
+    "typescript": "5.2.2"
   }
 }
