@@ -1,0 +1,20 @@
+{
+  "name": "@kitchen-table/js-sdk",
+  "private": true,
+  "files":["dist"],
+  "main": "",
+  "module": "",
+  "exports": {
+    ".": {
+      "import": "./dist/@kitchen-table/js-sdk.es.js",
+      "require": "./dist/@kitchen-table/js-sdk.umd.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch"
+  },
+  "devDependencies": {
+    "vite": "^4.4.9"
+  }
+}

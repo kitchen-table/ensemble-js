@@ -1,5 +1,5 @@
 {
-  "name": "@packages/backend",
+  "name": "@kitchen-table/backend",
   "scripts": {
     "build": "tsc",
     "dev": "open ../playground/index.html && nodemon src/main.ts"

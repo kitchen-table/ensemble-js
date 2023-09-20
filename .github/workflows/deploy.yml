@@ -41,7 +41,7 @@ jobs:
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: "apps/frontend"
+          path: "apps/playground"
 
       - name: Deploy Pages
         uses: actions/deploy-pages@v2

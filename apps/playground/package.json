@@ -1,3 +1,13 @@
 {
-  "name": "@packages/playground"
+  "name": "@kitchen-table/playground",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "@kitchen-table/js-sdk": "workspace:*"
+  },
+  "dependencies": {
+    "vite": "^4.4.9"
+  }
 }
