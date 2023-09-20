@@ -2,8 +2,8 @@
   "name": "@kitchen-table/js-sdk",
   "private": true,
   "files":["dist"],
-  "main": "",
-  "module": "",
+  "main": "dist/@kitchen-table/js-sdk.umd.js",
+  "module": "dist/@kitchen-table/js-sdk.es.js",
   "exports": {
     ".": {
       "import": "./dist/@kitchen-table/js-sdk.es.js",
@@ -13,6 +13,10 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch"
+  },
+  "dependencies": {
+    "@medv/finder": "3.1.0",
+    "socket.io-client": "^4.7.2"
   },
   "devDependencies": {
     "vite": "^4.4.9"
