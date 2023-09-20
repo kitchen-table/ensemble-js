@@ -1,0 +1,7 @@
+{
+  "name": "@packages/logger",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc --declaration"
+  }
+}

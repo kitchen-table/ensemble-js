@@ -8,5 +8,8 @@
   "dependencies": {
     "turbo": "1.10.14",
     "typescript": "5.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "20.6.3"
   }
 }
