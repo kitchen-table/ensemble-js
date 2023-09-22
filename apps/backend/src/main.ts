@@ -20,10 +20,10 @@ io.on("connection", (socket) => {
     Logger.log(`Client ${socket.id} left room ${data.roomId}`);
   });
 
-  socket.on("mousemove", (data: { x: number; y: number }) => {
-    socket.emit("mousemove", { ...data, sender: socket.id });
+  socket.on("move", (data: { element: string; x: number; y: number }) => {
+    socket.emit("move", { ...data, sender: socket.id });
     socket.rooms.forEach((roomId) => {
-      socket.to(roomId).emit("mousemove", { ...data, sender: socket.id });
+      socket.to(roomId).emit("move", { ...data, sender: socket.id });
     });
     Logger.log(`Client ${socket.id} moved mouse to ${data.x}, ${data.y}`);
   });

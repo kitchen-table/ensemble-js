@@ -16,11 +16,11 @@ class Api {
     });
   }
 
-  join({ roomId, sessionId }: { roomId: string; sessionId: string }) {
+  join({ roomId }: { roomId: string }) {
     this.socket.emit('join', { roomId });
   }
 
-  leave({ roomId, sessionId }: { roomId: string; sessionId: string }) {
+  leave({ roomId }: { roomId: string }) {
     this.socket.emit('leave', { roomId });
     this.socket.close();
   }

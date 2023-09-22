@@ -1,50 +1,72 @@
 import Events from './events';
 import Api from './api';
 
-type Config = {
-  window: Window;
-};
-
 class KitchenTable {
   sessionId: string;
   roomId: string;
-  api: Api | null = null;
-  window: Window;
+  api: Api;
+  events: Events;
 
-  constructor(config: Config) {
-    this.window = config.window;
+  private constructor(api: Api) {
+    this.api = api;
+    this.events = new Events(this.api);
+    this.sessionId = this.api.sessionId;
     // TODO: hash에 설정된 roomId가 있으면 가져오기
-    this.roomId = this.window.location.origin + this.window.location.pathname;
-    this.sessionId = this.initSessionId();
+    this.roomId = window.location.origin + window.location.pathname;
+    this.setup();
   }
 
-  async init(server: string) {
+  static async init(server: string) {
     const api = await Api.init(server);
-    this.api = api;
 
-    api.join({ roomId: this.roomId, sessionId: this.sessionId });
-    Events.init(api);
-    Events.bind(this.window.addEventListener);
+    return new KitchenTable(api);
+  }
+
+  private setup() {
+    this.api.join({ roomId: this.roomId });
+    this.events.bind(window.addEventListener);
+    this.bindOnMessage();
 
     // TODO: cleanup or re-init
-    this.window.addEventListener('locationchange', (evt) => {
+    window.addEventListener('locationchange', (evt) => {
       this.cleanup();
     });
   }
 
-  private initSessionId() {
-    const storedSessionId = window.sessionStorage.getItem('kitchen-table-session-id');
-    if (storedSessionId) {
-      return storedSessionId;
-    }
-    const sessionId = this.window.crypto.randomUUID();
-    window.sessionStorage.setItem('kitchen-table-session-id', sessionId);
-    return sessionId;
+  private bindOnMessage() {
+    this.api.listen('move', (data) => {
+      let isMe = false;
+      const cursorId = `kitchen-table-${data.sender}`;
+      if (data.sender === this.sessionId) {
+        isMe = true;
+      }
+      const element: HTMLElement = document.querySelector(data.element);
+      const cursor: HTMLElement | null = document.querySelector(`#${cursorId}`);
+      if (!element) {
+        return;
+      }
+      const { top, left } = element.getBoundingClientRect();
+      if (cursor) {
+        cursor.style.left = `${left + data.x}px`;
+        cursor.style.top = `${top + data.y}px`;
+      } else {
+        const cursor = document.createElement('div');
+        cursor.id = cursorId;
+        cursor.style.position = 'absolute';
+        cursor.style.width = '10px';
+        cursor.style.height = '10px';
+        cursor.style.borderRadius = '50%';
+        cursor.style.backgroundColor = isMe ? 'blue' : 'red';
+        cursor.style.left = `${left + data.x}px`;
+        cursor.style.top = `${top + data.y}px`;
+        document.body.appendChild(cursor);
+      }
+    });
   }
 
   cleanup() {
-    this.api?.leave({ roomId: this.roomId, sessionId: this.sessionId });
-    Events.unbind(this.window.removeEventListener);
+    this.api?.leave({ roomId: this.roomId });
+    this.events.unbind(window.removeEventListener);
   }
 }
 
