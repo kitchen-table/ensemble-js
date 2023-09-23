@@ -1,3 +1,4 @@
+import { User } from '../index';
 import { ErrorCode } from './error-code';
 
 export interface RoomLeaveInput {
@@ -7,4 +8,6 @@ export interface RoomLeaveInput {
 export interface RoomLeaveOutput {
   success: boolean;
   errorCode?: ErrorCode;
+
+  userId: User['id'];
 }
