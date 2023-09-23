@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "@packages/logger": "*",
+    "@packages/api": "*",
     "socket.io": "4.7.2"
   },
   "devDependencies": {

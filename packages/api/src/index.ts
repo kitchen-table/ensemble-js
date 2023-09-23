@@ -8,6 +8,7 @@ export * from './events/room-user-list';
 export * from './events/pointer-move';
 export * from './events/pointer-click';
 export * from './events/chat-message';
+export * from './events/update-my-info';
 
 export * from './types/uuid';
 export * from './types/datetime';

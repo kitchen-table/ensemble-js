@@ -1,6 +1,13 @@
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { Logger } from '@packages/logger';
+import { onChatMessage } from './events/chat-message';
+import { onPointerClick } from './events/pointer-click';
+import { onPointerMove } from './events/pointer-move';
+import { onRoomJoin } from './events/room-join';
+import { onRoomLeave } from './events/room-leave';
+import { onRoomUserList } from './events/room-user-list';
+import { onUpdateMyInfo } from './events/update-my-info';
 
 const httpServer = createServer();
 const io = new Server(httpServer, {
@@ -9,6 +16,14 @@ const io = new Server(httpServer, {
 
 io.on('connection', (socket) => {
   Logger.log(`Client connected: ${socket.id}`);
+
+  onChatMessage(io, socket);
+  onPointerClick(io, socket);
+  onPointerMove(io, socket);
+  onRoomJoin(io, socket);
+  onRoomLeave(io, socket);
+  onRoomUserList(io, socket);
+  onUpdateMyInfo(io, socket);
 
   socket.on('join', (data: { roomId: string }) => {
     socket.join(data.roomId);
