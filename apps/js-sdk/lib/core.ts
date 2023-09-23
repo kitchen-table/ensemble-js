@@ -1,6 +1,12 @@
 import EventEmitter from './eventEmitter';
 import Api from './api';
-import { EventType, PointerMoveOutput, RoomJoinOutput, type User } from '@packages/api';
+import {
+  EventType,
+  PointerMoveOutput,
+  RoomJoinOutput,
+  RoomLeaveOutput,
+  type User,
+} from '@packages/api';
 
 class KitchenTable {
   roomId: string;
@@ -54,6 +60,14 @@ class KitchenTable {
       console.log('join new user!', joinUserInfo);
     });
 
+    this.api.listen(EventType.ROOM_LEAVE, (data: RoomLeaveOutput) => {
+      this.userList = this.userList.filter((user) => user.id !== data.userId);
+      const cursorId = `kitchen-table-${data.userId}`;
+      const element: HTMLElement | null = document.querySelector(`#${cursorId}}`);
+      element?.remove();
+      console.log('leave user!', data.userId, element);
+    });
+
     this.api.listen(EventType.POINTER_MOVE, (data: PointerMoveOutput) => {
       let isMe = false;
       const cursorId = `kitchen-table-${data.userId}`;
@@ -74,14 +88,14 @@ class KitchenTable {
         cursor.style.top = cursorTop;
       } else {
         const cursor = document.createElement('div');
-        const userColor = this.userList.find((user) => user.id === data.userId)?.color ?? 'red';
-        const bgColor = isMe ? 'blue' : userColor;
+        const userColor = this.userList.find((user) => user.id === data.userId)?.color;
+        const bgColor = isMe ? this.myInfo?.color : userColor;
         cursor.id = cursorId;
         cursor.style.position = 'absolute';
         cursor.style.width = '10px';
         cursor.style.height = '10px';
         cursor.style.borderRadius = '50%';
-        cursor.style.backgroundColor = bgColor;
+        cursor.style.backgroundColor = bgColor ?? 'red';
         cursor.style.left = cursorLeft;
         cursor.style.top = cursorTop;
         document.body.appendChild(cursor);
