@@ -27,9 +27,12 @@ io.on('connection', (socket) => {
   onUpdateMyInfo(io, socket);
 
   socket.on('disconnect', () => {
-    const user: User = socket.data.user;
-    const output: RoomLeaveOutput = { success: true, userId: user.id };
-    socket.rooms.forEach((roomId) => socket.to(roomId).emit(EventType.ROOM_LEAVE, output));
+    // 로그인 된 소켓일때만, 나간 유저에 대한 정보를 모든 유저에게 전송함.
+    if (socket.data.user) {
+      const user: User = socket.data.user;
+      const output: RoomLeaveOutput = { success: true, userId: user.id };
+      io.emit(EventType.ROOM_LEAVE, output);
+    }
     Logger.log(`Client disconnected: ${socket.id}`);
   });
 });
