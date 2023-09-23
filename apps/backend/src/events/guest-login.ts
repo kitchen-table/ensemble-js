@@ -3,6 +3,7 @@ import { Logger } from '@packages/logger';
 import { Server, Socket } from 'socket.io';
 import { faker } from '@faker-js/faker';
 
+// ! emitWithAck only
 export function onGuestLogin(io: Server, socket: Socket) {
   socket.on(EventType.GUEST_LOGIN, (data: GuestLoginInput, callback: Function) => {
     Logger.log(`[${EventType.GUEST_LOGIN}] ${JSON.stringify(data)}`);
