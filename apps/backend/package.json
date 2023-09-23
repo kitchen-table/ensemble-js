@@ -5,8 +5,9 @@
     "dev": "open ../playground/index.html && nodemon src/main.ts"
   },
   "dependencies": {
-    "@packages/logger": "*",
+    "@faker-js/faker": "8.1.0",
     "@packages/api": "*",
+    "@packages/logger": "*",
     "socket.io": "4.7.2"
   },
   "devDependencies": {

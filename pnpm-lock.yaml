@@ -20,6 +20,9 @@ importers:
 
   apps/backend:
     dependencies:
+      '@faker-js/faker':
+        specifier: 8.1.0
+        version: 8.1.0
       '@packages/api':
         specifier: '*'
         version: link:../../packages/api
@@ -251,6 +254,11 @@ packages:
     os: [win32]
     requiresBuild: true
     optional: true
+
+  /@faker-js/faker@8.1.0:
+    resolution: {integrity: sha512-38DT60rumHfBYynif3lmtxMqMqmsOQIxQgEuPZxCk2yUYN0eqWpTACgxi0VpidvsJB8CRxCpvP7B3anK85FjtQ==}
+    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
+    dev: false
 
   /@jridgewell/resolve-uri@3.1.1:
     resolution: {integrity: sha512-dSYZh7HhCDtCKm4QakX0xFpsRDqjjtZf/kjI/v3T3Nwt5r8/qz/M19F9ySyOqU94SXBmeG9ttTul+YnR4LOxFA==}
