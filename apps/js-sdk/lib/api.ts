@@ -2,9 +2,11 @@ import { io, Socket } from 'socket.io-client';
 
 class Api {
   private socket: Socket;
+  public sessionId: string;
 
   constructor(socket: Socket) {
     this.socket = socket;
+    this.sessionId = socket.id;
     return this;
   }
 

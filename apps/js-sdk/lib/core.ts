@@ -46,9 +46,11 @@ class KitchenTable {
         return;
       }
       const { top, left } = element.getBoundingClientRect();
+      const cursorLeft = `${left + data.x + scrollX}px`;
+      const cursorTop = `${top + data.y + scrollY}px`;
       if (cursor) {
-        cursor.style.left = `${left + data.x}px`;
-        cursor.style.top = `${top + data.y}px`;
+        cursor.style.left = cursorLeft;
+        cursor.style.top = cursorTop;
       } else {
         const cursor = document.createElement('div');
         cursor.id = cursorId;
@@ -57,8 +59,8 @@ class KitchenTable {
         cursor.style.height = '10px';
         cursor.style.borderRadius = '50%';
         cursor.style.backgroundColor = isMe ? 'blue' : 'red';
-        cursor.style.left = `${left + data.x}px`;
-        cursor.style.top = `${top + data.y}px`;
+        cursor.style.left = cursorLeft;
+        cursor.style.top = cursorTop;
         document.body.appendChild(cursor);
       }
     });
