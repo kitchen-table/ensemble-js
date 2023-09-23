@@ -1,4 +1,7 @@
 export enum EventType {
+  /** 비회원 로그인 (유저 정보 생성) */
+  GUEST_LOGIN = 'GUEST_LOGIN',
+
   /** 방 입장 */
   ROOM_JOIN = 'ROOM_JOIN',
 

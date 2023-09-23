@@ -8,6 +8,7 @@ import { onRoomJoin } from './events/room-join';
 import { onRoomLeave } from './events/room-leave';
 import { onRoomUserList } from './events/room-user-list';
 import { onUpdateMyInfo } from './events/update-my-info';
+import { onGuestLogin } from './events/guest-login';
 
 const httpServer = createServer();
 const io = new Server(httpServer, { cors: { origin: '*', methods: ['GET', 'POST'] } });
@@ -15,6 +16,7 @@ const io = new Server(httpServer, { cors: { origin: '*', methods: ['GET', 'POST'
 io.on('connection', (socket) => {
   Logger.log(`Client connected: ${socket.id}`);
 
+  onGuestLogin(io, socket);
   onChatMessage(io, socket);
   onPointerClick(io, socket);
   onPointerMove(io, socket);
