@@ -1,5 +1,14 @@
 import { io, Socket } from 'socket.io-client';
-import { EventType, RoomJoinInput, RoomJoinOutput, RoomLeaveInput } from '@packages/api';
+import {
+  EventType,
+  GuestLoginInput,
+  GuestLoginOutput,
+  RoomJoinInput,
+  RoomJoinOutput,
+  RoomLeaveInput,
+  RoomUserListInput,
+  RoomUserListOutput,
+} from '@packages/api';
 
 class Api {
   private socket: Socket;
@@ -17,8 +26,12 @@ class Api {
     });
   }
 
-  async join({ roomId }: RoomJoinInput): Promise<RoomJoinOutput> {
-    return this.socket.emitWithAck(EventType.ROOM_JOIN, { roomId });
+  async login({}: GuestLoginInput): Promise<GuestLoginOutput> {
+    return this.socket.emitWithAck(EventType.GUEST_LOGIN, {});
+  }
+
+  async getUserList({ roomId }: RoomUserListInput): Promise<RoomUserListOutput> {
+    return this.socket.emitWithAck(EventType.ROOM_USER_LIST, { roomId });
   }
 
   leave({ roomId }: RoomLeaveInput) {
