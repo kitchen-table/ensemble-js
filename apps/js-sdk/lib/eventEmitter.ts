@@ -1,18 +1,23 @@
 import { finder } from '@medv/finder';
 import Api from './api';
+import { EventType } from '@packages/api';
 
 type EventKey = keyof WindowEventMap;
 
-class Events {
+class EventEmitter {
   events: Map<EventKey, Function> = new Map();
 
   constructor(api: Api) {
     function emitMoveEvent(event: PointerEvent | MouseEvent) {
-      api.emit('move', onMove(event));
+      api.emit(EventType.POINTER_MOVE, onMove(event));
+    }
+    function emitPointerClickEvent(event: PointerEvent) {
+      api.emit(EventType.POINTER_CLICK, onPointerClick(event));
     }
 
     this.events.set('mousemove', emitMoveEvent);
     this.events.set('pointermove', emitMoveEvent);
+    this.events.set('click', emitPointerClickEvent);
   }
 
   add<K extends EventKey>(type: K, callback: (event: WindowEventMap[K]) => any) {
@@ -52,4 +57,16 @@ function onMove(event: PointerEvent | MouseEvent) {
   return { element, x, y };
 }
 
-export default Events;
+function onPointerClick(event: PointerEvent) {
+  if (!(event.target instanceof HTMLElement)) {
+    return;
+  }
+  const element = finder(event.target);
+  const rect = event.target.getBoundingClientRect();
+  const x = event.clientX - rect.left; //x position within the element.
+  const y = event.clientY - rect.top; //y position within the element.
+
+  return { element, x, y };
+}
+
+export default EventEmitter;

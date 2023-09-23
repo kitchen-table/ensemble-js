@@ -1,12 +1,11 @@
 import { io, Socket } from 'socket.io-client';
+import { EventType, RoomJoinInput, RoomJoinOutput, RoomLeaveInput } from '@packages/api';
 
 class Api {
   private socket: Socket;
-  public sessionId: string;
 
   constructor(socket: Socket) {
     this.socket = socket;
-    this.sessionId = socket.id;
     return this;
   }
 
@@ -18,12 +17,12 @@ class Api {
     });
   }
 
-  join({ roomId }: { roomId: string }) {
-    this.socket.emit('join', { roomId });
+  async join({ roomId }: RoomJoinInput): Promise<RoomJoinOutput> {
+    return this.socket.emitWithAck(EventType.ROOM_JOIN, { roomId });
   }
 
-  leave({ roomId }: { roomId: string }) {
-    this.socket.emit('leave', { roomId });
+  leave({ roomId }: RoomLeaveInput) {
+    this.socket.emit(EventType.ROOM_LEAVE, { roomId });
     this.socket.close();
   }
 

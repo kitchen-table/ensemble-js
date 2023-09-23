@@ -42,6 +42,9 @@ importers:
       '@medv/finder':
         specifier: 3.1.0
         version: 3.1.0
+      '@packages/api':
+        specifier: workspace:*
+        version: link:../../packages/api
       socket.io-client:
         specifier: ^4.7.2
         version: 4.7.2
