@@ -2,6 +2,7 @@
   "name": "@packages/logger",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc --declaration"
+    "build": "tsc --declaration",
+    "dev": "tsc --watch --declaration"
   }
 }

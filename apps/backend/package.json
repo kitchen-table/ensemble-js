@@ -2,7 +2,7 @@
   "name": "@kitchen-table/backend",
   "scripts": {
     "build": "tsc",
-    "dev": "open ../playground/index.html && nodemon src/main.ts"
+    "dev": "ts-node src/main.ts"
   },
   "dependencies": {
     "@faker-js/faker": "8.1.0",

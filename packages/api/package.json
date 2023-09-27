@@ -12,6 +12,9 @@
   "scripts": {
     "build": "pnpm build:esm && pnpm build:cjs",
     "build:esm": "tsc --declaration",
-    "build:cjs": "tsc -p tsconfig-cjs.json --declaration"
+    "build:cjs": "tsc -p tsconfig-cjs.json --declaration",
+    "dev": "pnpm dev:esm && pnpm dev:cjs",
+    "dev:esm": "tsc --watch --declaration",
+    "dev:cjs": "tsc -p tsconfig-cjs.json --watch --declaration"
   }
 }
