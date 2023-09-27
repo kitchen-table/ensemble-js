@@ -1,23 +1,22 @@
-import EventEmitter from './eventEmitter';
-import Api from './api';
-import {
-  EventType,
-  PointerMoveOutput,
-  RoomJoinOutput,
-  RoomLeaveOutput,
-  type User,
-} from '@packages/api';
+import SendEventBinder from 'sendEventBinder';
+import Api from 'api';
+import { EventType, PointerMoveOutput, type User } from '@packages/api';
+import ReceiveEventListener from 'receiveEventListener';
+import Cursor from 'ui/cursor';
+import invariant from 'ts-invariant';
 
 class KitchenTable {
   roomId: string;
   api: Api;
-  events: EventEmitter;
+  sendEventBinder: SendEventBinder;
+  receiveEventListener: ReceiveEventListener;
   myInfo: User | undefined;
-  userList: User[] = [];
+  users: Map<string, User> = new Map();
 
   private constructor(api: Api) {
     this.api = api;
-    this.events = new EventEmitter(this.api);
+    this.receiveEventListener = new ReceiveEventListener(this.api);
+    this.sendEventBinder = new SendEventBinder(this.api);
     // TODO: hash에 설정된 roomId가 있으면 가져오기
     this.roomId = window.location.origin + window.location.pathname;
     this.setup();
@@ -32,10 +31,24 @@ class KitchenTable {
   private async setup() {
     const { myInfo } = await this.api.login({ roomId: this.roomId });
     this.myInfo = myInfo;
-    this.events.bind(window.addEventListener);
-    this.bindOnMessage();
+    Cursor.setUserCursor(myInfo.color);
+    this.sendEventBinder.bind(window.addEventListener);
     this.joinRoom();
-    this.setUserList();
+    await this.setUserList();
+
+    this.receiveEventListener.listenRoomJoin(myInfo.id, (user) => {
+      this.users.set(user.id, user);
+    });
+    this.receiveEventListener.listenRoomLeave((data) => {
+      this.users.delete(data.userId);
+      Cursor.delete(data.userId);
+    });
+    this.receiveEventListener.listenPointMove((data) => {
+      if (data.userId === myInfo.id) {
+        return; // not my cursor
+      }
+      this.moveCursor(data);
+    });
 
     // TODO: cleanup or re-init
     window.addEventListener('locationchange', (evt) => {
@@ -46,66 +59,30 @@ class KitchenTable {
   private joinRoom() {
     this.api.emit(EventType.ROOM_JOIN, { roomId: this.roomId });
   }
+
   private async setUserList() {
     const { users } = await this.api.getUserList({ roomId: this.roomId });
-    this.userList = users.filter((user) => user.id !== this.myInfo?.id);
+    this.users = new Map(users.map((user) => [user.id, user]));
   }
 
-  private bindOnMessage() {
-    this.api.listen(EventType.ROOM_JOIN, (data: RoomJoinOutput) => {
-      const joinUserInfo = data.myInfo;
-      if (joinUserInfo.id === this.myInfo?.id) {
-        return;
-      }
-      console.log('join new user!', joinUserInfo);
-    });
+  private moveCursor(data: PointerMoveOutput) {
+    const cursorUser = this.users.get(data.userId);
+    invariant(cursorUser, `user not found. userId: ${data.userId}`);
 
-    this.api.listen(EventType.ROOM_LEAVE, (data: RoomLeaveOutput) => {
-      this.userList = this.userList.filter((user) => user.id !== data.userId);
-      const cursorId = `kitchen-table-${data.userId}`;
-      const element: HTMLElement | null = document.querySelector(`#${cursorId}}`);
-      element?.remove();
-      console.log('leave user!', data.userId, element);
-    });
+    if (!Cursor.get(data.userId)) {
+      Cursor.make(data.userId, cursorUser.color);
+    }
+    const element: HTMLElement | null = document.querySelector(data.element);
+    invariant(element, `element not found. selector: ${data.element}`);
 
-    this.api.listen(EventType.POINTER_MOVE, (data: PointerMoveOutput) => {
-      let isMe = false;
-      const cursorId = `kitchen-table-${data.userId}`;
-      if (data.userId === this.myInfo?.id) {
-        isMe = true;
-      }
-      const element: HTMLElement | null = document.querySelector(data.element);
-      if (!element) {
-        console.warn(`element not found. selector: ${data.element}`);
-        return;
-      }
-      const cursor: HTMLElement | null = document.querySelector(`#${cursorId}`);
-      const { top, left } = element.getBoundingClientRect();
-      const cursorLeft = `${left + data.x + scrollX}px`;
-      const cursorTop = `${top + data.y + scrollY}px`;
-      if (cursor) {
-        cursor.style.left = cursorLeft;
-        cursor.style.top = cursorTop;
-      } else {
-        const cursor = document.createElement('div');
-        const userColor = this.userList.find((user) => user.id === data.userId)?.color;
-        const bgColor = isMe ? this.myInfo?.color : userColor;
-        cursor.id = cursorId;
-        cursor.style.position = 'absolute';
-        cursor.style.width = '10px';
-        cursor.style.height = '10px';
-        cursor.style.borderRadius = '50%';
-        cursor.style.backgroundColor = bgColor ?? 'red';
-        cursor.style.left = cursorLeft;
-        cursor.style.top = cursorTop;
-        document.body.appendChild(cursor);
-      }
-    });
+    const { top, left } = element.getBoundingClientRect();
+
+    Cursor.move(data.userId, data.x + left, data.y + top);
   }
 
   cleanup() {
     this.api?.leave({ roomId: this.roomId });
-    this.events.unbind(window.removeEventListener);
+    this.sendEventBinder.unbind(window.removeEventListener);
   }
 }
 

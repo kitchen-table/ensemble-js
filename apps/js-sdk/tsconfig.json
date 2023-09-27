@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./lib",
     "module": "ESNext",
     "target": "es5",
     "sourceMap": true,
@@ -8,7 +9,7 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
   },
   "exclude": [
     "node_modules"

@@ -17,9 +17,11 @@
   "dependencies": {
     "@medv/finder": "3.1.0",
     "@packages/api": "workspace:*",
-    "socket.io-client": "^4.7.2"
+    "socket.io-client": "^4.7.2",
+    "ts-invariant": "0.10.3"
   },
   "devDependencies": {
-    "vite": "^4.4.9"
+    "vite": "^4.4.9",
+    "vite-tsconfig-paths": "^4.2.1"
   }
 }

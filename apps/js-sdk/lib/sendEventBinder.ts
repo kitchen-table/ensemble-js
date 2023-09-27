@@ -4,7 +4,7 @@ import { EventType } from '@packages/api';
 
 type EventKey = keyof WindowEventMap;
 
-class EventEmitter {
+class SendEventBinder {
   events: Map<EventKey, Function> = new Map();
 
   constructor(api: Api) {
@@ -47,6 +47,7 @@ class EventEmitter {
 
 function onMove(event: PointerEvent | MouseEvent) {
   if (!(event.target instanceof HTMLElement)) {
+    console.error('event.target is not HTMLElement', event.target);
     return;
   }
   const element = finder(event.target);
@@ -69,4 +70,4 @@ function onPointerClick(event: PointerEvent) {
   return { element, x, y };
 }
 
-export default EventEmitter;
+export default SendEventBinder;
