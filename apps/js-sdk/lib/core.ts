@@ -2,8 +2,9 @@ import SendEventBinder from 'sendEventBinder';
 import Api from 'api';
 import { EventType, PointerMoveOutput, type User } from '@packages/api';
 import ReceiveEventListener from 'receiveEventListener';
-import Cursor from 'ui/cursor';
+import Fab from 'ui/FAB';
 import invariant from 'ts-invariant';
+import Cursor from 'ui/Cursor';
 
 class KitchenTable {
   roomId: string;
@@ -32,22 +33,32 @@ class KitchenTable {
     const { myInfo } = await this.api.login({ roomId: this.roomId });
     this.myInfo = myInfo;
     Cursor.setUserCursor(myInfo.color);
+    Cursor.mount();
+
     this.sendEventBinder.bind(window.addEventListener);
     this.joinRoom();
     await this.setUserList();
 
-    this.receiveEventListener.listenRoomJoin(myInfo.id, (user) => {
-      this.users.set(user.id, user);
+    Fab.mount();
+    this.renderUserList();
+
+    this.receiveEventListener.listenRoomJoin(myInfo.id, (joinUser) => {
+      this.users.set(joinUser.id, joinUser);
+      this.renderUserList();
     });
-    this.receiveEventListener.listenRoomLeave((data) => {
-      this.users.delete(data.userId);
-      Cursor.delete(data.userId);
+    this.receiveEventListener.listenRoomLeave((roomLeaveData) => {
+      this.users.delete(roomLeaveData.userId);
+      Cursor.delete(roomLeaveData.userId);
+      this.renderUserList();
     });
-    this.receiveEventListener.listenPointMove((data) => {
-      if (data.userId === myInfo.id) {
+    this.receiveEventListener.listenPointMove((pointerMoveData) => {
+      if (pointerMoveData.userId === myInfo.id) {
         return; // not my cursor
       }
-      this.moveCursor(data);
+      this.moveCursor(pointerMoveData);
+    });
+    this.receiveEventListener.listenChatMessage((chatMessageData) => {
+      console.log(chatMessageData.message);
     });
 
     // TODO: cleanup or re-init
@@ -65,19 +76,22 @@ class KitchenTable {
     this.users = new Map(users.map((user) => [user.id, user]));
   }
 
+  private renderUserList() {
+    Fab.renderUsers(Array.from(this.users.values()));
+  }
+
   private moveCursor(data: PointerMoveOutput) {
     const cursorUser = this.users.get(data.userId);
     invariant(cursorUser, `user not found. userId: ${data.userId}`);
-
-    if (!Cursor.get(data.userId)) {
-      Cursor.make(data.userId, cursorUser.color);
-    }
     const element: HTMLElement | null = document.querySelector(data.element);
     invariant(element, `element not found. selector: ${data.element}`);
-
     const { top, left } = element.getBoundingClientRect();
-
-    Cursor.move(data.userId, data.x + left, data.y + top);
+    Cursor.move({
+      id: data.userId,
+      x: data.x + left,
+      y: data.y + top,
+      color: cursorUser.color,
+    });
   }
 
   cleanup() {

@@ -17,8 +17,13 @@
   "dependencies": {
     "@medv/finder": "3.1.0",
     "@packages/api": "workspace:*",
-    "socket.io-client": "^4.7.2",
-    "ts-invariant": "0.10.3"
+    "socket.io-client": "4.7.2",
+    "ts-invariant": "0.10.3",
+    "preact": "10.17.1",
+    "@preact/signals": "1.2.1",
+    "@preact/preset-vite": "2.5.0",
+    "@svgr/rollup": "8.1.0",
+    "@emotion/css": "11.11.2"
   },
   "devDependencies": {
     "vite": "^4.4.9",

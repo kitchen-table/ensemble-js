@@ -2,14 +2,21 @@
   "compilerOptions": {
     "baseUrl": "./lib",
     "module": "ESNext",
-    "target": "es5",
+    "target": "es6",
     "sourceMap": true,
     "moduleResolution": "Node",
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
+    "allowJs": true,
     "strictNullChecks": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "paths": {
+      "react": ["./node_modules/preact/compat/"],
+      "react-dom": ["./node_modules/preact/compat/"]
+    }
   },
   "exclude": [
     "node_modules"

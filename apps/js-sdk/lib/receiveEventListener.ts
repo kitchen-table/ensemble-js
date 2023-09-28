@@ -1,5 +1,12 @@
 import Api from 'api';
-import { EventType, PointerMoveOutput, RoomJoinOutput, RoomLeaveOutput, User } from '@packages/api';
+import {
+  ChatMessageOutput,
+  EventType,
+  PointerMoveOutput,
+  RoomJoinOutput,
+  RoomLeaveOutput,
+  User,
+} from '@packages/api';
 
 class ReceiveEventListener {
   api: Api;
@@ -14,6 +21,7 @@ class ReceiveEventListener {
       if (isMe) {
         return;
       }
+      console.log('join user!', data.myInfo);
       callback(data.myInfo);
     });
   }
@@ -28,6 +36,12 @@ class ReceiveEventListener {
 
   listenPointMove(callback: (data: PointerMoveOutput) => unknown) {
     this.api.listen(EventType.POINTER_MOVE, (data: PointerMoveOutput) => {
+      callback(data);
+    });
+  }
+
+  listenChatMessage(callback: (data: ChatMessageOutput) => unknown) {
+    this.api.listen(EventType.CHAT_MESSAGE, (data: ChatMessageOutput) => {
       callback(data);
     });
   }
