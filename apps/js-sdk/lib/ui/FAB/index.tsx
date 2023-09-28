@@ -3,6 +3,7 @@ import { User } from '@packages/api/dist/esm';
 import { signal, Signal } from '@preact/signals';
 import FABContainer from 'ui/FAB/FABContainer';
 import FABUsers from 'ui/FAB/FABUsers';
+import FABChatList from 'ui/FAB/FABChatList';
 
 class Fab {
   static usersSignal: Signal<User[]> = signal<User[]>([]);
@@ -23,6 +24,7 @@ const FabRoot = () => {
   return (
     <FABContainer>
       <FABUsers />
+      <FABChatList />
     </FABContainer>
   );
 };

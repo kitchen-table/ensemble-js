@@ -48,7 +48,11 @@ class SendEventBinder {
 function onMove(event: PointerEvent | MouseEvent) {
   if (!(event.target instanceof HTMLElement)) {
     console.error('event.target is not HTMLElement', event.target);
-    return;
+    return {
+      element: finder(document.body),
+      x: event.clientX,
+      y: event.clientY,
+    };
   }
   const element = finder(event.target);
   const rect = event.target.getBoundingClientRect();

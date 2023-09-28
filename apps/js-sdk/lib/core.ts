@@ -5,6 +5,8 @@ import ReceiveEventListener from 'receiveEventListener';
 import Fab from 'ui/FAB';
 import invariant from 'ts-invariant';
 import Cursor from 'ui/Cursor';
+import Message from 'ui/Message';
+import ChatStorage from 'storage/ChatStorage';
 
 class KitchenTable {
   roomId: string;
@@ -42,6 +44,14 @@ class KitchenTable {
     Fab.mount();
     this.renderUserList();
 
+    Message.bindEventHandler();
+    Message.render();
+    Message.onMessageSubmit((message) => {
+      this.api.emit(EventType.CHAT_MESSAGE, { message });
+    });
+
+    ChatStorage.init();
+
     this.receiveEventListener.listenRoomJoin(myInfo.id, (joinUser) => {
       this.users.set(joinUser.id, joinUser);
       this.renderUserList();
@@ -58,7 +68,15 @@ class KitchenTable {
       this.moveCursor(pointerMoveData);
     });
     this.receiveEventListener.listenChatMessage((chatMessageData) => {
-      console.log(chatMessageData.message);
+      const chatUser = this.users.get(chatMessageData.userId);
+      invariant(chatUser, `user not found. userId: ${chatMessageData.userId}`);
+      ChatStorage.pushMessage({
+        userId: chatUser.id,
+        userName: chatUser.name,
+        userColor: chatUser.color,
+        message: chatMessageData.message,
+      });
+      Message.onMessageReceive(chatMessageData.userId, chatMessageData.message);
     });
 
     // TODO: cleanup or re-init

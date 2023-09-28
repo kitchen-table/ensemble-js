@@ -1,5 +1,6 @@
 import Cursor from 'ui/Cursor/index';
 import { css } from '@emotion/css';
+import MessageBox from 'ui/Message/MessageBox';
 
 export default function Cursors() {
   return (
@@ -13,15 +14,21 @@ export default function Cursors() {
               position: absolute;
               top: ${cursor.y - 2}px;
               left: ${cursor.x - 2}px;
-              width: ${Cursor.size}px;
-              height: ${Cursor.size}px;
               pointer-events: none;
               z-index: 9999;
             `}
-            dangerouslySetInnerHTML={{
-              __html: Cursor.getCursorSVG(cursor.color),
-            }}
-          />
+          >
+            <div
+              className={css`
+                width: ${Cursor.size}px;
+                height: ${Cursor.size}px;
+              `}
+              dangerouslySetInnerHTML={{
+                __html: Cursor.getCursorSVG(cursor.color),
+              }}
+            />
+            <MessageBox id={cursor.id} color={cursor.color} />
+          </div>
         );
       })}
     </>

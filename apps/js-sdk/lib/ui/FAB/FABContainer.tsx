@@ -14,17 +14,14 @@ export default function FABContainer({ children }: { children: ComponentChildren
       <div
         id="kitchen-table-fab"
         className={css`
+          display: grid;
+          gap: 8px;
           width: 40px;
           min-height: 40px;
-          padding: 4px;
+          padding: 8px 4px;
           background-color: white;
           box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
           border-radius: 8px;
-
-          &:hover {
-            transform: scale(1.03);
-            transition: transform 0.2s;
-          }
         `}
       >
         {children}

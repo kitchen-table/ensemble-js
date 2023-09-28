@@ -26,6 +26,11 @@ export default function FABUsers() {
               width: 32px;
               height: 30px;
               border-radius: 8px;
+
+              &:hover {
+                transform: scale(1.03);
+                transition: transform 0.2s;
+              }
             `}
           >
             {user.name[0].toUpperCase()}
