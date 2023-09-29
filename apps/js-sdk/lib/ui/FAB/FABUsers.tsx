@@ -1,5 +1,6 @@
 import { css } from '@emotion/css';
 import Fab from 'ui/FAB/index';
+import { getContrastColor } from 'utils/checkIsBriteness';
 
 export default function FABUsers() {
   return (
@@ -23,6 +24,7 @@ export default function FABUsers() {
               align-items: center;
               background-color: ${user.color};
               border: 2px solid #3d3939;
+              color: ${getContrastColor(user.color)};
               width: 32px;
               height: 30px;
               border-radius: 8px;

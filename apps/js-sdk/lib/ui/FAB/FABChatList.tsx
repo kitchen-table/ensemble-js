@@ -11,6 +11,9 @@ export default function FABChatList() {
     >
       <summary
         className={css`
+          display: flex;
+          justify-content: center;
+          align-items: center;
           cursor: pointer;
           list-style: none;
 
@@ -120,8 +123,8 @@ const ChatIcon = ({ color }: { color: string }) => {
   return (
     <div
       className={css`
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
         cursor: pointer;
         transition: transform 0.2s ease-in-out;
         &:active {

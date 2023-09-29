@@ -40,6 +40,12 @@ class ReceiveEventListener {
     });
   }
 
+  listenPointClick(callback: (data: PointerMoveOutput) => unknown) {
+    this.api.listen(EventType.POINTER_CLICK, (data: PointerMoveOutput) => {
+      callback(data);
+    });
+  }
+
   listenChatMessage(callback: (data: ChatMessageOutput) => unknown) {
     this.api.listen(EventType.CHAT_MESSAGE, (data: ChatMessageOutput) => {
       callback(data);

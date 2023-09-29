@@ -1,8 +1,10 @@
 import { render } from 'preact';
 import { effect, Signal, signal } from '@preact/signals';
 import MessageInput from 'ui/Message/MessageInput';
+import invariant from 'ts-invariant';
 
 class Message {
+  private static containerId = 'kitchen-table-message-container';
   static mousePositionSignal = signal({ x: 0, y: 0 });
   static isVisibleSignal = signal(false);
   static messageSignal = signal('');
@@ -48,9 +50,15 @@ class Message {
 
   static render() {
     const container = document.createElement('div');
-    container.id = 'kitchen-table-message-container';
+    container.id = this.containerId;
     document.body.appendChild(container);
     render(<MessageRoot />, container);
+  }
+
+  static isMessageElement(element: HTMLElement) {
+    const container = document.getElementById(this.containerId);
+    invariant(container, 'Message container not found');
+    return container.contains(element);
   }
 }
 

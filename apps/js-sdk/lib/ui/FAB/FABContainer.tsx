@@ -4,6 +4,7 @@ import { ComponentChildren } from 'preact';
 export default function FABContainer({ children }: { children: ComponentChildren }) {
   return (
     <div
+      id="kitchen-table-fab"
       className={css`
         position: fixed;
         bottom: 40px;
@@ -12,7 +13,6 @@ export default function FABContainer({ children }: { children: ComponentChildren
       `}
     >
       <div
-        id="kitchen-table-fab"
         className={css`
           display: grid;
           gap: 8px;

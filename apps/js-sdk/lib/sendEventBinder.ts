@@ -1,6 +1,7 @@
 import { finder } from '@medv/finder';
 import Api from './api';
 import { EventType } from '@packages/api';
+import Cursor from 'ui/Cursor';
 
 type EventKey = keyof WindowEventMap;
 
@@ -12,6 +13,14 @@ class SendEventBinder {
       api.emit(EventType.POINTER_MOVE, onMove(event));
     }
     function emitPointerClickEvent(event: PointerEvent) {
+      // @ts-ignore
+      if (event.isKitchenTableEvent) {
+        return;
+      }
+      // ignore bubbled event
+      if (event.pointerId === -1 && event.pointerType === '') {
+        return;
+      }
       api.emit(EventType.POINTER_CLICK, onPointerClick(event));
     }
 
@@ -46,8 +55,7 @@ class SendEventBinder {
 }
 
 function onMove(event: PointerEvent | MouseEvent) {
-  if (!(event.target instanceof HTMLElement)) {
-    console.error('event.target is not HTMLElement', event.target);
+  if (!(event.target instanceof HTMLElement) || isIgnoreElement(event.target)) {
     return {
       element: finder(document.body),
       x: event.clientX,
@@ -63,8 +71,12 @@ function onMove(event: PointerEvent | MouseEvent) {
 }
 
 function onPointerClick(event: PointerEvent) {
-  if (!(event.target instanceof HTMLElement)) {
-    return;
+  if (!(event.target instanceof HTMLElement) || isIgnoreElement(event.target)) {
+    return {
+      element: finder(document.body),
+      x: event.clientX,
+      y: event.clientY,
+    };
   }
   const element = finder(event.target);
   const rect = event.target.getBoundingClientRect();
@@ -73,5 +85,13 @@ function onPointerClick(event: PointerEvent) {
 
   return { element, x, y };
 }
+
+const isIgnoreElement = (element: HTMLElement) => {
+  return (
+    // Fab.isFabElement(element) ||
+    // Message.isMessageElement(element) ||
+    Cursor.isCursorElement(element)
+  );
+};
 
 export default SendEventBinder;

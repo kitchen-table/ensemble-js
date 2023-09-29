@@ -67,6 +67,9 @@ class KitchenTable {
       }
       this.moveCursor(pointerMoveData);
     });
+    this.receiveEventListener.listenPointClick((pointerClickData) => {
+      this.clickCursor(pointerClickData);
+    });
     this.receiveEventListener.listenChatMessage((chatMessageData) => {
       const chatUser = this.users.get(chatMessageData.userId);
       invariant(chatUser, `user not found. userId: ${chatMessageData.userId}`);
@@ -110,6 +113,24 @@ class KitchenTable {
       y: data.y + top,
       color: cursorUser.color,
     });
+  }
+
+  private clickCursor(data: PointerMoveOutput) {
+    const cursorUser = this.users.get(data.userId);
+    const isMyEvent = cursorUser?.id === this.myInfo?.id;
+    invariant(cursorUser, `user not found. userId: ${data.userId}`);
+    const element: HTMLElement | null = document.querySelector(data.element);
+    invariant(element, `element not found. selector: ${data.element}`);
+    const { top, left } = element.getBoundingClientRect();
+    Cursor.click(
+      {
+        id: window.crypto.randomUUID(),
+        x: data.x + left,
+        y: data.y + top,
+        color: cursorUser.color,
+      },
+      isMyEvent,
+    );
   }
 
   cleanup() {

@@ -1,8 +1,10 @@
 import { signal, Signal } from '@preact/signals';
 import { render } from 'preact';
 import Cursors from 'ui/Cursor/Cursors';
+import CursorClicks from 'ui/Cursor/CursorClicks';
+import invariant from 'ts-invariant';
 
-type CursorData = {
+export type CursorData = {
   id: string;
   color: string;
   x: number;
@@ -10,8 +12,10 @@ type CursorData = {
 };
 
 class Cursor {
+  static containerId = 'kitchen-table-cursors-container';
   static size = 24;
   static cursorSignals: Signal<CursorData[]> = signal([]);
+  static cursorClickSignals: Signal<CursorData[]> = signal([]);
 
   static getCursorSVG(color: string) {
     return `
@@ -33,9 +37,9 @@ class Cursor {
 
   static mount() {
     const container = document.createElement('div');
-    container.id = 'kitchen-table-cursors-container';
+    container.id = this.containerId;
     document.body.appendChild(container);
-    render(<Cursors />, container);
+    render(<CursorRoot />, container);
   }
 
   static delete(id: string) {
@@ -55,6 +59,44 @@ class Cursor {
       this.cursorSignals.value.push(data);
     }
   }
+
+  static click(data: CursorData, isMyCursor: boolean) {
+    this.cursorClickSignals.value = this.cursorClickSignals.value.concat(data);
+    if (isMyCursor) {
+      return;
+    }
+    /**
+     * @experimental
+     * This is a hack to make the click event work on the remote cursor.
+     */
+    const element = document.elementFromPoint(data.x, data.y);
+    if (element) {
+      const customEvent = new PointerEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        clientX: data.x,
+        clientY: data.y,
+      });
+      // @ts-ignore
+      customEvent.isKitchenTableEvent = true;
+      element.dispatchEvent(customEvent);
+    }
+  }
+
+  static isCursorElement(element: HTMLElement) {
+    const container = document.getElementById(this.containerId);
+    invariant(container, 'Cursor container not found');
+    return container.contains(element);
+  }
 }
+
+const CursorRoot = () => {
+  return (
+    <>
+      <Cursors />
+      <CursorClicks />
+    </>
+  );
+};
 
 export default Cursor;
