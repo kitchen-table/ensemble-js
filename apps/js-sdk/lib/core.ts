@@ -7,13 +7,13 @@ import invariant from 'ts-invariant';
 import Cursor from 'ui/Cursor';
 import Message from 'ui/Message';
 import ChatStorage from 'storage/ChatStorage';
+import MyInfoStorage from 'storage/MyInfoStorage';
 
 class KitchenTable {
   roomId: string;
   api: Api;
   sendEventBinder: SendEventBinder;
   receiveEventListener: ReceiveEventListener;
-  myInfo: User | undefined;
   users: Map<string, User> = new Map();
 
   private constructor(api: Api) {
@@ -33,7 +33,6 @@ class KitchenTable {
 
   private async setup() {
     const { myInfo } = await this.api.login({ roomId: this.roomId });
-    this.myInfo = myInfo;
     Cursor.setUserCursor(myInfo.color);
     Cursor.mount();
 
@@ -51,6 +50,8 @@ class KitchenTable {
     });
 
     ChatStorage.init();
+    MyInfoStorage.init();
+    MyInfoStorage.save(myInfo);
 
     this.receiveEventListener.listenRoomJoin(myInfo.id, (joinUser) => {
       this.users.set(joinUser.id, joinUser);
@@ -117,7 +118,7 @@ class KitchenTable {
 
   private clickCursor(data: PointerMoveOutput) {
     const cursorUser = this.users.get(data.userId);
-    const isMyEvent = cursorUser?.id === this.myInfo?.id;
+    const isMyEvent = cursorUser?.id === MyInfoStorage.get().id;
     invariant(cursorUser, `user not found. userId: ${data.userId}`);
     const element: HTMLElement | null = document.querySelector(data.element);
     invariant(element, `element not found. selector: ${data.element}`);

@@ -9,19 +9,16 @@ type Chat = {
 };
 
 class ChatStorage {
+  private static key = 'kitchen-table-message-list';
   static messageListSignal: Signal<Chat[]> = signal([]);
 
   static init() {
-    const savedMessages = sessionStorage.getItem('kitchen-table-message-list');
+    const savedMessages = sessionStorage.getItem(this.key);
     if (savedMessages) {
       this.messageListSignal.value = JSON.parse(savedMessages);
     }
     effect(() => {
-      console.log('messageListSignal');
-      sessionStorage.setItem(
-        'kitchen-table-message-list',
-        JSON.stringify(this.messageListSignal.value),
-      );
+      sessionStorage.setItem(this.key, JSON.stringify(this.messageListSignal.value));
     });
   }
 
