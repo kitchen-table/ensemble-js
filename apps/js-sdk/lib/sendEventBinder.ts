@@ -2,13 +2,21 @@ import { finder } from '@medv/finder';
 import Api from './api';
 import { EventType } from '@packages/api';
 import Cursor from 'ui/Cursor';
+import { TYPE, wire } from 'di';
+import Fab from 'ui/FAB';
+import Message from 'ui/Message';
 
 type EventKey = keyof WindowEventMap;
 
 class SendEventBinder {
+  api!: Api;
   events: Map<EventKey, Function> = new Map();
 
-  constructor(api: Api) {
+  constructor() {
+    wire(this, 'api', TYPE.API);
+
+    const api = this.api;
+
     function emitMoveEvent(event: PointerEvent | MouseEvent) {
       api.emit(EventType.POINTER_MOVE, onMove(event));
     }
@@ -41,15 +49,15 @@ class SendEventBinder {
     return this.events.get(type);
   }
 
-  bind(bind: (key: string, callback: any) => any) {
+  bindNativeEventListener() {
     this.events.forEach((callback, type) => {
-      bind(type, callback);
+      window.addEventListener(type, callback as any);
     });
   }
 
-  unbind(unbind: (key: string, callback: any) => any) {
+  unbindNativeEventListener() {
     this.events.forEach((callback, type) => {
-      unbind(type, callback);
+      window.removeEventListener(type, callback as any);
     });
   }
 }
@@ -87,11 +95,7 @@ function onPointerClick(event: PointerEvent) {
 }
 
 const isIgnoreElement = (element: HTMLElement) => {
-  return (
-    // Fab.isFabElement(element) ||
-    // Message.isMessageElement(element) ||
-    Cursor.isCursorElement(element)
-  );
+  return Fab.hasThis(element) || Message.hasThis(element) || Cursor.hasThis(element);
 };
 
 export default SendEventBinder;

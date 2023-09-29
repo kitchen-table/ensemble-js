@@ -1,7 +1,9 @@
 {
   "name": "@kitchen-table/js-sdk",
   "private": true,
-  "files":["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "dist/@kitchen-table/js-sdk.umd.js",
   "module": "dist/@kitchen-table/js-sdk.es.js",
   "exports": {
@@ -12,18 +14,19 @@
   },
   "scripts": {
     "build": "vite build",
-    "dev": "vite build --watch"
+    "dev": "NODE_ENV=development vite build --watch"
   },
   "dependencies": {
+    "@emotion/css": "11.11.2",
     "@medv/finder": "3.1.0",
+    "@owja/ioc": "2.0.0-alpha.7",
     "@packages/api": "workspace:*",
-    "socket.io-client": "4.7.2",
-    "ts-invariant": "0.10.3",
-    "preact": "10.17.1",
-    "@preact/signals": "1.2.1",
     "@preact/preset-vite": "2.5.0",
+    "@preact/signals": "1.2.1",
     "@svgr/rollup": "8.1.0",
-    "@emotion/css": "11.11.2"
+    "preact": "10.17.1",
+    "socket.io-client": "4.7.2",
+    "ts-invariant": "0.10.3"
   },
   "devDependencies": {
     "vite": "^4.4.9",

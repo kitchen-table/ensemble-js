@@ -5,50 +5,107 @@ import {
   PointerMoveOutput,
   RoomJoinOutput,
   RoomLeaveOutput,
-  User,
 } from '@packages/api';
+import { TYPE, wire } from 'di';
+import UsersStorage from 'storage/UsersStorage';
+import MyInfoStorage from 'storage/MyInfoStorage';
+import Cursor from 'ui/Cursor';
+import invariant from 'ts-invariant';
+import ChatStorage from 'storage/ChatStorage';
+import Message from 'ui/Message';
 
 class ReceiveEventListener {
-  api: Api;
+  api!: Api;
+  cursor!: Cursor;
+  message!: Message;
 
-  constructor(api: Api) {
-    this.api = api;
+  myInfoStorage!: MyInfoStorage;
+  usersStorage!: UsersStorage;
+  chatStorage!: ChatStorage;
+
+  constructor() {
+    wire(this, 'api', TYPE.API);
+    wire(this, 'cursor', TYPE.CURSOR);
+    wire(this, 'message', TYPE.MESSAGE);
+
+    wire(this, 'myInfoStorage', TYPE.MY_INFO_STORAGE);
+    wire(this, 'usersStorage', TYPE.USERS_STORAGE);
+    wire(this, 'chatStorage', TYPE.CHAT_STORAGE);
   }
 
-  listenRoomJoin(myId: string, callback: (data: User) => unknown) {
+  init() {
+    this.listenRoomJoin();
+    this.listenRoomLeave();
+    this.listenPointMove();
+    this.listenPointClick();
+    this.listenChatMessage();
+  }
+
+  listenRoomJoin() {
     this.api.listen(EventType.ROOM_JOIN, (data: RoomJoinOutput) => {
-      const isMe = data.myInfo.id === myId;
-      if (isMe) {
-        return;
-      }
       console.log('join user!', data.myInfo);
-      callback(data.myInfo);
+      this.usersStorage.push(data.myInfo);
     });
   }
 
-  listenRoomLeave(callback: (data: RoomLeaveOutput) => unknown) {
+  listenRoomLeave() {
     this.api.listen(EventType.ROOM_LEAVE, (data: RoomLeaveOutput) => {
       console.log('leave user!', data.userId);
-
-      callback(data);
+      this.usersStorage.delete(data.userId);
+      this.cursor.deleteCursor(data.userId);
     });
   }
 
-  listenPointMove(callback: (data: PointerMoveOutput) => unknown) {
+  listenPointMove() {
     this.api.listen(EventType.POINTER_MOVE, (data: PointerMoveOutput) => {
-      callback(data);
+      if (data.userId === this.myInfoStorage.get().id) {
+        return; // not my cursor
+      }
+      const cursorUser = this.usersStorage.get(data.userId);
+      invariant(cursorUser, `user not found. userId: ${data.userId}`);
+      const element: HTMLElement | null = document.querySelector(data.element);
+      invariant(element, `element not found. selector: ${data.element}`);
+      const { top, left } = element.getBoundingClientRect();
+      this.cursor.moveCursor({
+        id: data.userId,
+        x: data.x + left,
+        y: data.y + top,
+        color: cursorUser.color,
+      });
     });
   }
 
-  listenPointClick(callback: (data: PointerMoveOutput) => unknown) {
+  listenPointClick() {
     this.api.listen(EventType.POINTER_CLICK, (data: PointerMoveOutput) => {
-      callback(data);
+      const cursorUser = this.usersStorage.get(data.userId);
+      const isMyEvent = cursorUser?.id === this.myInfoStorage.get().id;
+      invariant(cursorUser, `user not found. userId: ${data.userId}`);
+      const element: HTMLElement | null = document.querySelector(data.element);
+      invariant(element, `element not found. selector: ${data.element}`);
+      const { top, left } = element.getBoundingClientRect();
+      this.cursor.click(
+        {
+          id: window.crypto.randomUUID(),
+          x: data.x + left,
+          y: data.y + top,
+          color: cursorUser.color,
+        },
+        isMyEvent,
+      );
     });
   }
 
-  listenChatMessage(callback: (data: ChatMessageOutput) => unknown) {
+  listenChatMessage() {
     this.api.listen(EventType.CHAT_MESSAGE, (data: ChatMessageOutput) => {
-      callback(data);
+      const chatUser = this.usersStorage.get(data.userId);
+      invariant(chatUser, `user not found. userId: ${data.userId}`);
+      this.chatStorage.pushMessage({
+        userId: chatUser.id,
+        userName: chatUser.name,
+        userColor: chatUser.color,
+        message: data.message,
+      });
+      this.message.onMessageReceive(data.userId, data.message);
     });
   }
 }

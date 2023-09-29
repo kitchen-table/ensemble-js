@@ -3,47 +3,86 @@ import {
   EventType,
   GuestLoginInput,
   GuestLoginOutput,
-  RoomJoinInput,
-  RoomJoinOutput,
   RoomLeaveInput,
   RoomUserListInput,
   RoomUserListOutput,
 } from '@packages/api';
+import UsersStorage from 'storage/UsersStorage';
+import { TYPE, wire } from 'di';
+import MyInfoStorage from 'storage/MyInfoStorage';
 
 class Api {
-  private socket: Socket;
+  usersStorage!: UsersStorage;
+  myInfoStorage!: MyInfoStorage;
 
-  constructor(socket: Socket) {
-    this.socket = socket;
-    return this;
+  private socket: Socket;
+  private isReady: boolean = false;
+
+  constructor() {
+    wire(this, 'usersStorage', TYPE.USERS_STORAGE);
+    wire(this, 'myInfoStorage', TYPE.MY_INFO_STORAGE);
+
+    this.socket = io('http://localhost:3000');
+    this.init().then(() => (this.isReady = true));
   }
 
-  static async init(server: string): Promise<Api> {
-    const socket = io(server);
+  async init(): Promise<Api> {
     return new Promise((resolve, reject) => {
-      socket.on('connect', () => resolve(new Api(socket)));
-      socket.on('connect_error', reject);
+      if (this.isReady) {
+        resolve(this);
+        return;
+      }
+      this.socket.on('connect', () => resolve(this));
+      this.socket.on('connect_error', reject);
     });
   }
 
   async login({}: GuestLoginInput): Promise<GuestLoginOutput> {
-    return this.socket.emitWithAck(EventType.GUEST_LOGIN, {});
+    if (!this.isReady) {
+      throw new Error('Api is not ready');
+    }
+    const loginOutput: GuestLoginOutput = await this.socket.emitWithAck(EventType.GUEST_LOGIN, {});
+    this.myInfoStorage.save(loginOutput.myInfo);
+    return loginOutput;
+  }
+
+  joinRoom(roomId: string) {
+    if (!this.isReady) {
+      throw new Error('Api is not ready');
+    }
+    this.socket.emit(EventType.ROOM_JOIN, { roomId });
   }
 
   async getUserList({ roomId }: RoomUserListInput): Promise<RoomUserListOutput> {
-    return this.socket.emitWithAck(EventType.ROOM_USER_LIST, { roomId });
+    if (!this.isReady) {
+      throw new Error('Api is not ready');
+    }
+    const output: RoomUserListOutput = await this.socket.emitWithAck(EventType.ROOM_USER_LIST, {
+      roomId,
+    });
+    this.usersStorage.set(output.users);
+    return output;
   }
 
   leave({ roomId }: RoomLeaveInput) {
+    if (!this.isReady) {
+      throw new Error('Api is not ready');
+    }
     this.socket.emit(EventType.ROOM_LEAVE, { roomId });
     this.socket.close();
   }
 
   listen(event: string, callback: (...args: any[]) => unknown) {
+    if (!this.isReady) {
+      throw new Error('Api is not ready');
+    }
     this.socket.on(event, callback);
   }
 
   emit(event: string, payload: any) {
+    if (!this.isReady) {
+      throw new Error('Api is not ready');
+    }
     this.socket.emit(event, payload);
   }
 }

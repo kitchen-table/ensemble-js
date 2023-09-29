@@ -52,6 +52,9 @@ importers:
       '@medv/finder':
         specifier: 3.1.0
         version: 3.1.0
+      '@owja/ioc':
+        specifier: 2.0.0-alpha.7
+        version: 2.0.0-alpha.7
       '@packages/api':
         specifier: workspace:*
         version: link:../../packages/api
@@ -1670,6 +1673,10 @@ packages:
 
   /@medv/finder@3.1.0:
     resolution: {integrity: sha512-ojkXjR3K0Zz3jnCR80tqPL+0yvbZk/lEodb6RIVjLz7W8RVA2wrw8ym/CzCpXO9SYVUIKHFUpc7jvf8UKfIM3w==}
+    dev: false
+
+  /@owja/ioc@2.0.0-alpha.7:
+    resolution: {integrity: sha512-5LHUNdu/Mub32lej3rUSBsMZmZmmmpLgCrcT+47CniZbzmnlxSWPcwMPmDTyyyq1+ucG6m/DrL/VIVWK1Qx8Bg==}
     dev: false
 
   /@preact/preset-vite@2.5.0(@babel/core@7.23.0)(preact@10.17.1)(vite@4.4.9):

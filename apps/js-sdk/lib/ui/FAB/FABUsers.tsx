@@ -1,8 +1,10 @@
 import { css } from '@emotion/css';
-import Fab from 'ui/FAB/index';
 import { getContrastColor } from 'utils/checkIsBriteness';
+import UsersStorage from 'storage/UsersStorage';
 
 export default function FABUsers() {
+  const users = UsersStorage.usersSignal.value;
+
   return (
     <div
       id="kitchen-table-fab-users"
@@ -13,7 +15,7 @@ export default function FABUsers() {
         gap: 8px;
       `}
     >
-      {Fab.usersSignal.value.map((user) => {
+      {Array.from(users.values()).map((user) => {
         return (
           <div
             key={user.id}

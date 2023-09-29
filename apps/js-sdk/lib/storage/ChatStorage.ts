@@ -8,22 +8,23 @@ type Chat = {
   timestamp: number;
 };
 
-class ChatStorage {
-  private static key = 'kitchen-table-message-list';
-  static messageListSignal: Signal<Chat[]> = signal([]);
+const KEY = 'kitchen-table-message-list';
 
-  static init() {
-    const savedMessages = sessionStorage.getItem(this.key);
+class ChatStorage {
+  messages = signal<Chat[]>([]);
+
+  constructor() {
+    const savedMessages = sessionStorage.getItem(KEY);
     if (savedMessages) {
-      this.messageListSignal.value = JSON.parse(savedMessages);
+      this.messages.value = JSON.parse(savedMessages);
     }
     effect(() => {
-      sessionStorage.setItem(this.key, JSON.stringify(this.messageListSignal.value));
+      sessionStorage.setItem(KEY, JSON.stringify(this.messages.value));
     });
   }
 
-  static pushMessage(chat: Omit<Chat, 'timestamp'>) {
-    this.messageListSignal.value = this.messageListSignal.value.concat({
+  pushMessage(chat: Omit<Chat, 'timestamp'>) {
+    this.messages.value = this.messages.value.concat({
       ...chat,
       timestamp: Date.now(),
     });

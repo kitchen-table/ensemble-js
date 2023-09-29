@@ -10,6 +10,7 @@ const name = packageJson.name;
 export default defineConfig({
   plugins: [tsconfigPaths(), svgr(), preact()],
   build: {
+    minify: process.env.NODE_ENV !== 'development',
     lib: {
       entry: resolve(__dirname, 'lib/main.ts'),
       name,

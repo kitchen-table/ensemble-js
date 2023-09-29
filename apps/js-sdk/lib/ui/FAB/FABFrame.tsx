@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import { ComponentChildren } from 'preact';
 
-export default function FABContainer({ children }: { children: ComponentChildren }) {
+export default function FABFrame({ children }: { children: ComponentChildren }) {
   return (
     <div
       id="kitchen-table-fab"

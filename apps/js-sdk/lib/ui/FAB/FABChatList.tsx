@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
-import ChatStorage from 'storage/ChatStorage';
 import { useEffect, useRef } from 'preact/compat';
+import { resolve, TYPE } from 'di';
 
 export default function FABChatList() {
   return (
@@ -31,6 +31,8 @@ export default function FABChatList() {
 }
 
 const ChatListBox = () => {
+  const chatStorage = resolve(TYPE.CHAT_STORAGE);
+
   const messageList = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -38,7 +40,7 @@ const ChatListBox = () => {
       return;
     }
     messageList.current.scrollTop = messageList.current.scrollHeight;
-  }, [ChatStorage.messageListSignal.value.length === 0]);
+  }, [chatStorage().messages.value.length === 0]);
 
   useEffect(() => {
     if (messageList.current) {
@@ -46,7 +48,7 @@ const ChatListBox = () => {
         behavior: 'smooth',
       });
     }
-  }, [ChatStorage.messageListSignal.value.length]);
+  }, [chatStorage().messages.value.length]);
 
   return (
     <div
@@ -80,7 +82,7 @@ const ChatListBox = () => {
           }
         `}
       >
-        {ChatStorage.messageListSignal.value.map((message) => {
+        {chatStorage().messages.value.map((message) => {
           return (
             <div
               className={css`
