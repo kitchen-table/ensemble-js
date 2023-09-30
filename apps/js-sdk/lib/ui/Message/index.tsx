@@ -10,12 +10,14 @@ type EventKey = keyof WindowEventMap;
 
 class Message {
   static containerId = 'kitchen-table-message-container';
-  static mousePositionSignal = signal({ x: 0, y: 0 });
+  static inputContainerId = 'kitchen-table-message-input-container';
+
   static isVisibleSignal = signal(false);
   static messageSignal = signal('');
   static currentMessagesSignal: Signal<Record<string, string>> = signal({});
 
   events: Map<EventKey, Function> = new Map();
+  mousePositionSignal = signal({ x: 0, y: 0 });
 
   api!: Api;
 
@@ -49,11 +51,12 @@ class Message {
       Message.isVisibleSignal.value = false;
     }
 
-    function onPointerMove(e: PointerEvent) {
-      Message.mousePositionSignal.value = { x: e.clientX, y: e.clientY };
-    }
+    const onPointerMove = (e: PointerEvent) => {
+      this.mousePositionSignal.value = { x: e.clientX, y: e.clientY };
+    };
 
-    this.addMessageSubmitEffect()
+    this.addMessageSubmitEffect();
+    this.addMousePositionEffect();
     this.events.set('keydown', onKeyDown);
     this.events.set('click', onClick);
     this.events.set('pointermove', onPointerMove);
@@ -71,6 +74,18 @@ class Message {
         return;
       }
       this.api.emit(EventType.CHAT_MESSAGE, { message: Message.messageSignal.value });
+    });
+  }
+
+  private addMousePositionEffect() {
+    effect(() => {
+      const mousePosition = this.mousePositionSignal.value;
+      const inputContainer = document.querySelector(`#${Message.inputContainerId}`);
+      if (!(inputContainer instanceof HTMLDivElement)) {
+        return;
+      }
+      inputContainer.style.left = `${mousePosition.x + 20}px`;
+      inputContainer.style.top = `${mousePosition.y + 20}px`;
     });
   }
 

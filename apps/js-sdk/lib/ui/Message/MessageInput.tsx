@@ -1,6 +1,6 @@
 import Message from 'ui/Message/index';
 import { css } from '@emotion/css';
-import { useEffect, useRef } from 'preact/compat';
+import { ChangeEvent, useEffect, useRef } from 'preact/compat';
 import { useSignal } from '@preact/signals';
 
 const INITIAL_OPACITY = 8;
@@ -21,9 +21,20 @@ export default function MessageInput() {
     opacitySignal.value = INITIAL_OPACITY;
   };
 
-  const onInputChange = () => {
+  const resetInputWidth = () => {
+    inputRef.current?.style.removeProperty('width');
+  };
+
+  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     resetOpacity();
-    showPrevMessageSignal.value = false;
+    resetInputWidth();
+    e.currentTarget.style.width = `${e.currentTarget.scrollWidth}px`;
+
+    if (showPrevMessageSignal.value) {
+      setTimeout(() => {
+        showPrevMessageSignal.value = false;
+      }, 200);
+    }
   };
 
   useEffect(() => {
@@ -50,18 +61,19 @@ export default function MessageInput() {
   }, [opacitySignal.value]);
 
   if (!Message.isVisibleSignal.value) {
-    return null;
-  }
-  if (Message.mousePositionSignal.value.x === 0 || Message.mousePositionSignal.value.y === 0) {
-    return null;
+    return <div id={Message.inputContainerId} />;
   }
 
   return (
     <div
+      id={Message.inputContainerId}
       ref={containerRef}
       className={css`
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
         position: absolute;
-        font-size: 14px;
+
         z-index: 1000;
         background-color: white;
         white-space: pre-wrap;
@@ -70,31 +82,36 @@ export default function MessageInput() {
         border-radius: 8px;
         padding: 8px;
         line-height: 1.5;
-        top: ${Message.mousePositionSignal.value.y + 20}px;
-        left: ${Message.mousePositionSignal.value.x + 20}px;
         border: 1px solid #ccc;
       `}
     >
       <form
+        tabIndex={-1}
         onSubmit={(e) => {
           e.preventDefault();
           const form = e.currentTarget;
           const formData = new FormData(form);
           Message.messageSignal.value = String(formData.get('message'));
           showPrevMessageSignal.value = true;
+          resetInputWidth();
           form.reset();
         }}
       >
         <input
+          tabIndex={-1}
           ref={inputRef}
           onChange={onInputChange}
           onBlur={closeInput}
           className={css`
+            padding: 0;
             outline: none;
             border: none;
             overflow: hidden;
+            resize: none;
+            word-break: break-all;
+            font-size: 14px;
           `}
-          maxLength={80}
+          maxLength={50}
           name="message"
           placeholder="Message..."
           autocomplete="off"
@@ -103,10 +120,11 @@ export default function MessageInput() {
         />
       </form>
       <div
+        tabIndex={-1}
         className={css`
-          padding: 0 0 2px 2px;
+          font-size: 14px;
           overflow: visible;
-          margin-top: 2px;
+          word-break: break-all;
           transition: all 0.5s ease-in-out;
           opacity: ${showPrevMessageSignal.value ? 1 : 0};
           max-height: ${showPrevMessageSignal.value ? '300px' : 0};

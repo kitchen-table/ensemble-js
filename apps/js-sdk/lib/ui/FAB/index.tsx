@@ -3,6 +3,7 @@ import FABFrame from 'ui/FAB/FABFrame';
 import FABUsers from 'ui/FAB/FABUsers';
 import FABChatList from 'ui/FAB/FABChatList';
 import invariant from 'ts-invariant';
+import FABShare from 'ui/FAB/FABShare';
 
 class Fab {
   private static containerId = 'kitchen-table-fab-container';
@@ -29,6 +30,7 @@ const FabRoot = () => {
   return (
     <FABFrame>
       <FABUsers />
+      <FABShare />
       <FABChatList />
     </FABFrame>
   );
