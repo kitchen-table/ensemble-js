@@ -63,7 +63,7 @@ class SendEventBinder {
 }
 
 function onMove(event: PointerEvent | MouseEvent) {
-  if (!(event.target instanceof HTMLElement) || isIgnoreElement(event.target)) {
+  if (!(event.target instanceof HTMLElement) || isIgnoreMoveElement(event.target)) {
     return {
       element: finder(document.body),
       x: event.clientX,
@@ -79,7 +79,7 @@ function onMove(event: PointerEvent | MouseEvent) {
 }
 
 function onPointerClick(event: PointerEvent) {
-  if (!(event.target instanceof HTMLElement) || isIgnoreElement(event.target)) {
+  if (!(event.target instanceof HTMLElement) || isIgnoreClickElement(event.target)) {
     return {
       element: finder(document.body),
       x: event.clientX,
@@ -94,7 +94,14 @@ function onPointerClick(event: PointerEvent) {
   return { element, x, y };
 }
 
-const isIgnoreElement = (element: HTMLElement) => {
+const isIgnoreMoveElement = (element: HTMLElement) => {
+  return (
+    // Fab.hasThis(element) ||
+    Message.hasThis(element) || Cursor.hasThis(element)
+  );
+};
+
+const isIgnoreClickElement = (element: HTMLElement) => {
   return Fab.hasThis(element) || Message.hasThis(element) || Cursor.hasThis(element);
 };
 

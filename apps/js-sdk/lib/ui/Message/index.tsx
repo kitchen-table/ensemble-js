@@ -34,6 +34,12 @@ class Message {
     render(<MessageRoot />, container);
   }
 
+  unmount() {
+    const container = document.getElementById(Message.containerId);
+    invariant(container, 'Message container not found');
+    container.remove();
+  }
+
   private init() {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') {
@@ -65,6 +71,12 @@ class Message {
   bindNativeEventHandler() {
     this.events.forEach((callback, type) => {
       window.addEventListener(type, callback as any);
+    });
+  }
+
+  unbindNativeEventHandler() {
+    this.events.forEach((callback, type) => {
+      window.removeEventListener(type, callback as any);
     });
   }
 

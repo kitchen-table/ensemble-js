@@ -12,14 +12,18 @@ export type CursorData = {
 };
 
 class Cursor {
+  private static cursorStyleId = 'kitchen-table-cursor-style';
   private static containerId = 'kitchen-table-cursors-container';
   static size = 24;
   static cursorSignals: Signal<CursorData[]> = signal([]);
   static cursorClickSignals: Signal<CursorData[]> = signal([]);
 
-  static getCursorSVG(color: string) {
+  static getCursorSVG(color: string, isMyCursor?: boolean) {
     return `
-    <svg fill="${color}" width="${this.size}px" height="${this.size}px" viewBox="0 0 24 24" id="cursor-up-left" data-name="Flat Color" xmlns="http://www.w3.org/2000/svg" class="icon flat-color"><path id="primary" d="M20.8,9.4,4.87,2.18A2,2,0,0,0,2.18,4.87h0L9.4,20.8A2,2,0,0,0,11.27,22h.25a2.26,2.26,0,0,0,2-1.8l1.13-5.58,5.58-1.13a2.26,2.26,0,0,0,1.8-2A2,2,0,0,0,20.8,9.4Z"></path></svg>`;
+    <svg fill="#E2E2E2" width="${this.size}px" height="${this.size}px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3.1,4.46l7.21,15.92A1.17,1.17,0,0,0,12.5,20l1.26-6.23L20,12.5a1.17,1.17,0,0,0,.39-2.19L4.46,3.1A1,1,0,0,0,3.1,4.46Z" style="fill: ${color}; stroke-width: 2;"></path>
+      <path d="M3.1,4.46l7.21,15.92A1.17,1.17,0,0,0,12.5,20l1.26-6.23L20,12.5a1.17,1.17,0,0,0,.39-2.19L4.46,3.1A1,1,0,0,0,3.1,4.46Z" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path>
+    </svg>`;
   }
 
   constructor() {
@@ -27,7 +31,7 @@ class Cursor {
   }
 
   setUserCursor(color: string) {
-    const blob = new Blob([Cursor.getCursorSVG(color)], { type: 'image/svg+xml' });
+    const blob = new Blob([Cursor.getCursorSVG(color, true)], { type: 'image/svg+xml' });
     const URL = window.URL.createObjectURL(blob);
     const cssString = `
       * {
@@ -35,15 +39,26 @@ class Cursor {
       }
     `;
     const style = document.createElement('style');
+    style.id = Cursor.cursorStyleId;
     style.innerHTML = cssString;
     document.head.appendChild(style);
   }
 
-  mount() {
+  restoreUserCursor() {
+    document.head.removeChild(document.getElementById(Cursor.cursorStyleId)!);
+  }
+
+  private mount() {
     const container = document.createElement('div');
     container.id = Cursor.containerId;
     document.body.appendChild(container);
     render(<CursorRoot />, container);
+  }
+
+  unmount() {
+    const container = document.getElementById(Cursor.containerId);
+    invariant(container, 'Cursor container not found');
+    container.remove();
   }
 
   deleteCursor(id: string) {

@@ -34,18 +34,30 @@ function containerBind() {
    */
   container.bind<Cursor>(TYPE.CURSOR).to(Cursor).inSingletonScope();
   container.bind<Message>(TYPE.MESSAGE).to(Message).inSingletonScope();
+  container.bind<Fab>(TYPE.FAB).to(Fab).inSingletonScope();
+
+  function initUI() {
+    container.get(TYPE.CURSOR);
+    container.get(TYPE.MESSAGE);
+    container.get(TYPE.FAB);
+  }
 
   /**
    * kitchenTable core
    */
   container.bind<KitchenTable>(TYPE.KITCHEN_TABLE).to(KitchenTable).inSingletonScope();
+
+  return {
+    initUI,
+  };
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  containerBind();
+  const { initUI } = containerBind();
 
+  initUI();
   const kitchenTable = new KitchenTable();
   kitchenTable.init().catch(console.error);
-
-  new Fab();
+  // @ts-ignore
+  window.kitchenTable = kitchenTable;
 });

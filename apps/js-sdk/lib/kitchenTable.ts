@@ -4,11 +4,13 @@ import ReceiveEventListener from 'receiveEventListener';
 import Cursor from 'ui/Cursor';
 import Message from 'ui/Message';
 import { TYPE, wire } from 'di';
+import Fab from 'ui/FAB';
 
 class KitchenTable {
   roomId: string;
 
   api!: Api;
+  fab!: Fab;
   cursor!: Cursor;
   message!: Message;
   sendEventBinder!: SendEventBinder;
@@ -16,9 +18,9 @@ class KitchenTable {
 
   constructor() {
     wire(this, 'api', TYPE.API);
-    wire(this, 'message', TYPE.MESSAGE);
-
+    wire(this, 'fab', TYPE.FAB);
     wire(this, 'cursor', TYPE.CURSOR);
+    wire(this, 'message', TYPE.MESSAGE);
     wire(this, 'sendEventBinder', TYPE.SEND_EVENT_BINDER);
     wire(this, 'receiveEventListener', TYPE.RECEIVE_EVENT_LISTENER);
 
@@ -51,7 +53,12 @@ class KitchenTable {
 
   cleanup() {
     this.api?.leave({ roomId: this.roomId });
+    this.cursor.restoreUserCursor();
     this.sendEventBinder.unbindNativeEventListener();
+    this.message.unbindNativeEventHandler();
+    this.fab.unmount();
+    this.cursor.unmount();
+    this.message.unmount();
   }
 }
 
