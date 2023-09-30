@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { getContrastColor } from 'utils/checkIsBriteness';
+import { getContrastColor } from 'utils/color';
 import UsersStorage from 'storage/UsersStorage';
 
 export default function FABUsers() {

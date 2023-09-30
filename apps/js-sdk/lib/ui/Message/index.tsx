@@ -6,6 +6,8 @@ import Api from 'api';
 import { TYPE, wire } from 'di';
 import { EventType } from '@packages/api';
 
+type EventKey = keyof WindowEventMap;
+
 class Message {
   static containerId = 'kitchen-table-message-container';
   static mousePositionSignal = signal({ x: 0, y: 0 });
@@ -13,22 +15,25 @@ class Message {
   static messageSignal = signal('');
   static currentMessagesSignal: Signal<Record<string, string>> = signal({});
 
+  events: Map<EventKey, Function> = new Map();
+
   api!: Api;
 
   constructor() {
     wire(this, 'api', TYPE.API);
     this.mount();
+    this.init();
   }
 
-  mount() {
+  private mount() {
     const container = document.createElement('div');
     container.id = Message.containerId;
     document.body.appendChild(container);
     render(<MessageRoot />, container);
   }
 
-  bindNativeEventHandler() {
-    window.addEventListener('keydown', (e) => {
+  private init() {
+    function onKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') {
         Message.isVisibleSignal.value = false;
       }
@@ -38,18 +43,29 @@ class Message {
       if (e.key === 'Slash' || e.key === '/') {
         Message.isVisibleSignal.value = true;
       }
-    });
+    }
 
-    window.addEventListener('click', () => {
+    function onClick() {
       Message.isVisibleSignal.value = false;
-    });
+    }
 
-    window.addEventListener('pointermove', (e) => {
+    function onPointerMove(e: PointerEvent) {
       Message.mousePositionSignal.value = { x: e.clientX, y: e.clientY };
+    }
+
+    this.addMessageSubmitEffect()
+    this.events.set('keydown', onKeyDown);
+    this.events.set('click', onClick);
+    this.events.set('pointermove', onPointerMove);
+  }
+
+  bindNativeEventHandler() {
+    this.events.forEach((callback, type) => {
+      window.addEventListener(type, callback as any);
     });
   }
 
-  bindSubmitMessage() {
+  private addMessageSubmitEffect() {
     effect(() => {
       if (Message.messageSignal.value === '') {
         return;
@@ -58,7 +74,7 @@ class Message {
     });
   }
 
-  onMessageReceive(id: string, message: string) {
+  public onMessageReceive(id: string, message: string) {
     Message.currentMessagesSignal.value = {
       ...Message.currentMessagesSignal.value,
       [id]: message,

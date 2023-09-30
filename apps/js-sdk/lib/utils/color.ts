@@ -1,8 +1,7 @@
 import invariant from 'ts-invariant';
+import { type HexCode } from '@packages/api';
 
-type HexColorType = `#${string}`;
-
-export function checkIsBrightness(color: HexColorType): boolean {
+export function checkIsBrightness(color: HexCode): boolean {
   invariant(color.length === 7, 'color must be hex color');
   invariant(color[0] === '#', 'color must be hex color');
 
@@ -14,6 +13,6 @@ export function checkIsBrightness(color: HexColorType): boolean {
   return brightness >= 128;
 }
 
-export function getContrastColor(color: HexColorType): string {
+export function getContrastColor(color: HexCode): string {
   return checkIsBrightness(color) ? '#262626' : '#efefef';
 }

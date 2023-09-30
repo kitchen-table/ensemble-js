@@ -39,7 +39,6 @@ class KitchenTable {
 
     this.sendEventBinder.bindNativeEventListener();
     this.message.bindNativeEventHandler();
-    this.message.bindSubmitMessage();
 
     this.receiveEventListener.init();
     this.api.joinRoom(this.roomId);

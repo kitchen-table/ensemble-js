@@ -108,7 +108,10 @@ const ChatListBox = () => {
               </div>
               <span
                 className={css`
-                  margin-top: 4px;
+                  padding: 4px 8px;
+                  border: 1px solid #3d3939;
+                  border-radius: 4px;
+                  font-size: 13px;
                 `}
               >
                 {message.message}
