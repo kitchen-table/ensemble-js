@@ -5,6 +5,7 @@ import {
   PointerMoveOutput,
   RoomJoinOutput,
   RoomLeaveOutput,
+  UpdateMyInfoOutput,
 } from '@packages/api';
 import { TYPE, wire } from 'di';
 import UsersStorage from 'storage/UsersStorage';
@@ -39,12 +40,13 @@ class ReceiveEventListener {
     this.listenPointMove();
     this.listenPointClick();
     this.listenChatMessage();
+    this.listenUpdateUserInfo();
   }
 
   listenRoomJoin() {
     this.api.listen(EventType.ROOM_JOIN, (data: RoomJoinOutput) => {
       console.log('join user!', data.myInfo);
-      this.usersStorage.push(data.myInfo);
+      this.usersStorage.update(data.myInfo);
     });
   }
 
@@ -106,6 +108,13 @@ class ReceiveEventListener {
         message: data.message,
       });
       this.message.onMessageReceive(data.userId, data.message);
+    });
+  }
+
+  listenUpdateUserInfo() {
+    this.api.listen(EventType.UPDATE_MY_INFO, (data: UpdateMyInfoOutput) => {
+      console.log(data.myInfo);
+      this.usersStorage.update(data.myInfo);
     });
   }
 }

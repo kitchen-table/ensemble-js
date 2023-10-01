@@ -10,7 +10,7 @@ export function onUpdateMyInfo(io: Server, socket: Socket) {
     const user: User = socket.data.user;
     if (data.name) user.name = data.name;
     if (data.color) user.color = data.color;
-    if (data.isBackground) user.isBackground = data.isBackground;
+    if (data.isBackground !== undefined) user.isBackground = data.isBackground;
 
     const output: UpdateMyInfoOutput = {
       success: true,

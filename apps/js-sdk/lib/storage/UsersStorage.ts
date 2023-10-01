@@ -7,7 +7,7 @@ class UsersStorage {
 
   constructor() {}
 
-  set(users: User[]) {
+  setUsers(users: User[]) {
     UsersStorage.usersSignal.value = new Map(users.map((user) => [user.id, user]));
   }
 
@@ -17,7 +17,7 @@ class UsersStorage {
     return user;
   }
 
-  push(user: User) {
+  update(user: User) {
     const updated = new Map(UsersStorage.usersSignal.peek());
     updated.set(user.id, user);
     UsersStorage.usersSignal.value = updated;

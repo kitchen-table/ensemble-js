@@ -6,7 +6,7 @@ import { TYPE, wire } from 'di';
 import Fab from 'ui/FAB';
 import Message from 'ui/Message';
 
-type EventKey = keyof WindowEventMap;
+type EventKey = keyof DocumentEventMap;
 
 class SendEventBinder {
   api!: Api;
@@ -31,22 +31,14 @@ class SendEventBinder {
       }
       api.emit(EventType.POINTER_CLICK, onPointerClick(event));
     }
+    function emitIsBackgroundEvent() {
+      api.emit(EventType.UPDATE_MY_INFO, { isBackground: document.hidden });
+    }
 
     this.events.set('mousemove', emitMoveEvent);
     this.events.set('pointermove', emitMoveEvent);
     this.events.set('click', emitPointerClickEvent);
-  }
-
-  add<K extends EventKey>(type: K, callback: (event: WindowEventMap[K]) => any) {
-    this.events.set(type, callback);
-  }
-
-  remove(type: EventKey) {
-    this.events.delete(type);
-  }
-
-  get<K extends EventKey>(type: K) {
-    return this.events.get(type);
+    this.events.set('visibilitychange', emitIsBackgroundEvent);
   }
 
   bindNativeEventListener() {

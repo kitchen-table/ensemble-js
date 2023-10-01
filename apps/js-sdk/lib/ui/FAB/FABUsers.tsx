@@ -19,21 +19,19 @@ export default function FABUsers() {
     >
       {Array.from(users.values()).map((user) => {
         const isMe = user.id === getMyInfoStorage().get().id;
+        const isBackground = user.isBackground;
         return (
           <div
             key={user.id}
             id={`kitchen-table-fab-user-profile-${user.id}`}
-            style="cursor: pointer"
             aria-description={user.name}
             className={css`
               display: flex;
               justify-content: center;
               align-items: center;
               overflow: hidden;
-              border-width: 2px;
-              border-color: #3d3939;
-              border-style: ${isMe ? 'solid' : 'dashed'};
-              border-spacing: 1px;
+              border: 2px ${isBackground ? 'dashed' : 'solid'} #3d3939;
+
               width: 32px;
               height: 30px;
               border-radius: 8px;
@@ -45,14 +43,24 @@ export default function FABUsers() {
             `}
           >
             <div
+              style="cursor: pointer"
               className={css`
+                position: relative;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 background-color: ${user.color};
                 color: ${getContrastColor(user.color)};
+
                 width: 100%;
                 height: 100%;
+                ::after {
+                  position: absolute;
+                  content: '';
+                  width: 100%;
+                  height: 100%;
+                  backdrop-filter: grayscale(${isBackground ? 0.2 : 0});
+                }
               `}
             >
               {user.name[0].toUpperCase()}

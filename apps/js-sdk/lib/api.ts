@@ -60,7 +60,7 @@ class Api {
     const output: RoomUserListOutput = await this.socket.emitWithAck(EventType.ROOM_USER_LIST, {
       roomId,
     });
-    this.usersStorage.set(output.users);
+    this.usersStorage.setUsers(output.users);
     return output;
   }
 
