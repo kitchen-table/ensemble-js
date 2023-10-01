@@ -1,6 +1,6 @@
 import FABIcon from 'ui/FAB/FABIcon';
-import { css } from '@emotion/css';
 import FABToggle from 'ui/FAB/FABToggle';
+import styled from 'ui/styled';
 
 export default function FABShare() {
   const share = () => {
@@ -18,18 +18,18 @@ export default function FABShare() {
         </FABIcon>
       }
     >
-      <div
-        className={css`
-          padding: 2px;
-          font-size: 14px;
-        `}
-      >
+      <ShareBox>
         {/*  TODO*/}
         {window.location.href}
-      </div>
+      </ShareBox>
     </FABToggle>
   );
 }
+
+const ShareBox = styled.div`
+  padding: 2px;
+  font-size: 14px;
+`;
 
 const ShareIcon = ({ color }: { color: string }) => {
   return (

@@ -5,9 +5,11 @@ import FABChatList from 'ui/FAB/FABChatList';
 import invariant from 'ts-invariant';
 import FABShare from 'ui/FAB/FABShare';
 import FABLeave from 'ui/FAB/FABLeave';
+import EmotionCacheProvider from 'ui/styled/EmotionCacheProvider';
 
 class Fab {
   private static containerId = 'kitchen-table-fab-container';
+  private static rootId = 'kitchen-table-fab-root';
 
   constructor() {
     this.mount();
@@ -17,7 +19,33 @@ class Fab {
     const container = document.createElement('div');
     container.id = Fab.containerId;
     document.body.appendChild(container);
-    render(<FabRoot />, container);
+
+    const root = document.createElement('div');
+    root.id = Fab.rootId;
+
+    const shadowRoot = container.attachShadow({ mode: 'open' });
+    shadowRoot.appendChild(root);
+
+    render(
+      <EmotionCacheProvider rootId={Fab.containerId}>
+        <FabRoot />
+      </EmotionCacheProvider>,
+      root,
+    );
+  }
+
+  getRoot() {
+    const container = this.getContainer();
+    const root = container.shadowRoot?.firstChild;
+    invariant(root instanceof HTMLElement, 'Fab root not found');
+    invariant(root.id === Fab.rootId, 'Fab root not found');
+    return root;
+  }
+
+  getContainer() {
+    const container = document.getElementById(Fab.containerId);
+    invariant(container, 'Fab container not found');
+    return container;
   }
 
   unmount() {

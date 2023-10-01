@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'preact/compat';
 import { resolve, TYPE } from 'di';
 import FABIcon from 'ui/FAB/FABIcon';
 import FABToggle from 'ui/FAB/FABToggle';
+import styled from 'ui/styled';
 
 export default function FABChatList() {
   return (
@@ -21,89 +22,86 @@ export default function FABChatList() {
 const ChatListBox = () => {
   const chatStorage = resolve(TYPE.CHAT_STORAGE);
 
-  const messageList = useRef<HTMLDivElement>(null);
+  const chatListRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!messageList.current) {
+    if (!chatListRef.current) {
       return;
     }
-    messageList.current.scrollTop = messageList.current.scrollHeight;
+    chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
   }, [chatStorage().messages.value.length === 0]);
 
   useEffect(() => {
-    if (messageList.current) {
-      messageList.current.lastElementChild?.scrollIntoView({
+    if (chatListRef.current) {
+      chatListRef.current.lastElementChild?.scrollIntoView({
         behavior: 'smooth',
       });
     }
   }, [chatStorage().messages.value.length]);
 
   return (
-    <div
-      className={css`
-        width: 200px;
-        height: 180px;
-        font-size: 14px;
-        overflow-y: hidden;
-      `}
-    >
-      <div
-        ref={messageList}
-        className={css`
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          height: 100%;
-          gap: 8px;
-          overflow-y: auto;
-          -ms-overflow-style: none; /* IE and Edge */
-          scrollbar-width: none; /* Firefox */
-          &::-webkit-scrollbar {
-            display: none;
-          }
-        `}
-      >
+    <ChatListBoxContainer>
+      <ChatList ref={chatListRef}>
         {chatStorage().messages.value.map((message) => {
           return (
-            <div
-              className={css`
-                display: flex;
-              `}
-            >
-              <div
-                className={css`
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  background-color: ${message.userColor};
-                  border: 1px solid #3d3939;
-                  min-width: 24px;
-                  max-width: 24px;
-                  min-height: 22px;
-                  max-height: 22px;
-                  border-radius: 6px;
-                  margin-right: 8px;
-                `}
-              >
+            <ChatMessageContainer>
+              <ChatUserIcon bgColor={message.userColor}>
                 {message.userName[0].toUpperCase()}
-              </div>
-              <span
-                className={css`
-                  padding: 4px 8px;
-                  border: 1px solid #3d3939;
-                  border-radius: 4px;
-                  font-size: 13px;
-                `}
-              >
-                {message.message}
-              </span>
-            </div>
+              </ChatUserIcon>
+              <ChatMessage>{message.message}</ChatMessage>
+            </ChatMessageContainer>
           );
         })}
-      </div>
-    </div>
+      </ChatList>
+    </ChatListBoxContainer>
   );
 };
+
+const ChatListBoxContainer = styled.div`
+  width: 200px;
+  height: 180px;
+  font-size: 14px;
+  overflow-y: hidden;
+`;
+
+const ChatList = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100%;
+  gap: 8px;
+  overflow-y: auto;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const ChatMessageContainer = styled.div`
+  display: flex;
+`;
+
+const ChatUserIcon = styled.div<{ bgColor: string }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({ bgColor }) => bgColor};
+  border: 1px solid #3d3939;
+  min-width: 24px;
+  max-width: 24px;
+  min-height: 22px;
+  max-height: 22px;
+  border-radius: 6px;
+  margin-right: 8px;
+`;
+
+const ChatMessage = styled.span`
+  padding: 4px 8px;
+  border: 1px solid #3d3939;
+  border-radius: 4px;
+  font-size: 13px;
+`;
 
 const ChatIcon = ({ color }: { color: string }) => {
   return (
