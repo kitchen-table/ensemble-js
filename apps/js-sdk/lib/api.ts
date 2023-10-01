@@ -6,6 +6,7 @@ import {
   RoomLeaveInput,
   RoomUserListInput,
   RoomUserListOutput,
+  UpdateMyInfoInput,
 } from '@packages/api';
 import UsersStorage from 'storage/UsersStorage';
 import { TYPE, wire } from 'di';
@@ -47,10 +48,11 @@ class Api {
   }
 
   joinRoom(roomId: string) {
-    if (!this.isReady) {
-      throw new Error('Api is not ready');
-    }
-    this.socket.emit(EventType.ROOM_JOIN, { roomId });
+    this.emit(EventType.ROOM_JOIN, { roomId });
+  }
+
+  updateMyInfo(myInfo: UpdateMyInfoInput) {
+    this.emit(EventType.UPDATE_MY_INFO, myInfo);
   }
 
   async getUserList({ roomId }: RoomUserListInput): Promise<RoomUserListOutput> {
@@ -65,10 +67,7 @@ class Api {
   }
 
   leave({ roomId }: RoomLeaveInput) {
-    if (!this.isReady) {
-      throw new Error('Api is not ready');
-    }
-    this.socket.emit(EventType.ROOM_LEAVE, { roomId });
+    this.emit(EventType.ROOM_LEAVE, { roomId });
     this.socket.close();
   }
 

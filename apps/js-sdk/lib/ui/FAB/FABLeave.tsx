@@ -11,7 +11,13 @@ export default function FABLeave() {
   };
 
   return (
-    <FABIcon aria-label="Leave" role="tooltip" data-microtip-position="left" onClick={confirmLeave}>
+    <FABIcon
+      tabIndex={0}
+      aria-label="Leave"
+      role="tooltip"
+      data-microtip-position="left"
+      onClick={confirmLeave}
+    >
       <LeaveIcon color={'rgba(0,0,0,0.8)'} />
     </FABIcon>
   );

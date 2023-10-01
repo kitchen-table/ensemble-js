@@ -60,7 +60,7 @@ class ReceiveEventListener {
 
   listenPointMove() {
     this.api.listen(EventType.POINTER_MOVE, (data: PointerMoveOutput) => {
-      const isMyEvent = data.userId === this.myInfoStorage.get().id;
+      const isMyEvent = this.myInfoStorage.isMyId(data.userId);
       if (isMyEvent) {
         return; // not my cursor
       }
@@ -80,7 +80,7 @@ class ReceiveEventListener {
         return;
       }
       const cursorInfo = this.getCursorInfo(data);
-      const isMyEvent = data.userId === this.myInfoStorage.get().id;
+      const isMyEvent = this.myInfoStorage.isMyId(data.userId);
       this.cursor.click({ id: window.crypto.randomUUID(), ...cursorInfo }, isMyEvent);
     });
   }
@@ -113,6 +113,11 @@ class ReceiveEventListener {
 
   listenUpdateUserInfo() {
     this.api.listen(EventType.UPDATE_MY_INFO, (data: UpdateMyInfoOutput) => {
+      const isMyInfoUpdate = this.myInfoStorage.isMyId(data.myInfo.id);
+      if (isMyInfoUpdate) {
+        this.myInfoStorage.save(data.myInfo);
+        this.cursor.setUserCursor(data.myInfo.color);
+      }
       this.usersStorage.update(data.myInfo);
     });
   }

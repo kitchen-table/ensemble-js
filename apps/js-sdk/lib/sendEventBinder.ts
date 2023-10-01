@@ -35,7 +35,7 @@ class SendEventBinder {
       api.emit(EventType.POINTER_CLICK, onPointerClick(event));
     }
     function emitIsBackgroundEvent() {
-      api.emit(EventType.UPDATE_MY_INFO, { isBackground: document.hidden });
+      api.updateMyInfo({ isBackground: document.hidden });
       api.emit(EventType.POINTER_MOVE, { element: ELEMENT_SELECTOR.HIDE, x: 0, y: 0 });
     }
 

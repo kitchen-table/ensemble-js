@@ -1,6 +1,5 @@
-import { ComponentChild, ComponentChildren, JSX } from 'preact';
+import { ComponentChild, JSX } from 'preact';
 import { useEffect, useRef } from 'preact/compat';
-import { signal } from '@preact/signals';
 import styled from 'ui/styled';
 import { resolve, TYPE } from 'di';
 
@@ -10,8 +9,13 @@ type FABToggleProps = {
 
 export default function FABToggle({ icon, children, ...restProps }: FABToggleProps) {
   const getFab = resolve(TYPE.FAB);
-  const openSignal = signal<boolean>(false);
   const detailsRef = useRef<HTMLDetailsElement>(null);
+
+  const close = () => {
+    if (detailsRef.current) {
+      detailsRef.current.open = false;
+    }
+  };
 
   useEffect(() => {
     const fabRoot = getFab().getRoot();
@@ -21,14 +25,14 @@ export default function FABToggle({ icon, children, ...restProps }: FABTogglePro
       if (fabContainer.isEqualNode(event.target as Node)) {
         return;
       }
-      openSignal.value = false;
+      close();
     };
 
     function onClick(event: Event) {
       if (detailsRef.current?.contains(event.target as Node)) {
         return;
       }
-      openSignal.value = false;
+      close();
     }
 
     fabRoot.addEventListener('click', onClick);
@@ -41,16 +45,8 @@ export default function FABToggle({ icon, children, ...restProps }: FABTogglePro
   }, []);
 
   return (
-    <Details ref={detailsRef} open={openSignal}>
-      <Summary
-        onClick={(event) => {
-          event.preventDefault();
-          openSignal.value = !openSignal.value;
-        }}
-        {...restProps}
-      >
-        {icon}
-      </Summary>
+    <Details ref={detailsRef}>
+      <Summary {...restProps}>{icon}</Summary>
       <ContentWrapper>{children}</ContentWrapper>
     </Details>
   );

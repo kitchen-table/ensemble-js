@@ -25,9 +25,12 @@ const Container = styled.div`
   height: 30px;
   border-radius: 8px;
 
+  transition: transform 0.2s ease-in-out;
   &:hover {
     transform: scale(1.03);
-    transition: transform 0.2s;
+  }
+  &:active {
+    transform: scale(0.98);
   }
 `;
 
@@ -35,10 +38,6 @@ const SvgWrapper = styled.div`
   width: 20px;
   height: 20px;
   cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-  &:active {
-    transform: scale(1.03);
-  }
   svg {
     pointer-events: none;
   }

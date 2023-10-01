@@ -3,6 +3,9 @@ import UsersStorage from 'storage/UsersStorage';
 import { resolve, TYPE } from 'di';
 import styled from 'ui/styled';
 import { User } from '@packages/api';
+import FABToggle from 'ui/FAB/FABToggle';
+import EditMyInfo from 'ui/FAB/EditMyInfo';
+import UserProfile from 'ui/FAB/UserProfile';
 
 export default function FABUsers() {
   const users = UsersStorage.usersSignal.value;
@@ -11,21 +14,27 @@ export default function FABUsers() {
   return (
     <Container id="kitchen-table-fab-users">
       {Array.from(users.values()).map((user) => {
-        const isMe = user.id === getMyInfoStorage().get().id;
+        const isMe = getMyInfoStorage().isMyId(user.id);
         const isBackground = user.isBackground;
         return (
-          <UserWrapper
+          <FABToggle
             key={user.id}
-            aria-label={`${user.name}${isMe ? ' (You)' : ''}`}
-            data-microtip-position="left"
-            role="tooltip"
-            id={`kitchen-table-fab-user-profile-${user.id}`}
-            isBackground={isBackground}
+            icon={
+              <UserWrapper
+                aria-label={`${user.name}${isMe ? ' (You)' : ''}`}
+                data-microtip-position="left"
+                role="tooltip"
+                id={`kitchen-table-fab-user-profile-${user.id}`}
+                isBackground={isBackground}
+              >
+                <UserIcon isBackground={isBackground} color={user.color} style="cursor: pointer">
+                  {user.name[0].toUpperCase()}
+                </UserIcon>
+              </UserWrapper>
+            }
           >
-            <UserIcon isBackground={isBackground} color={user.color} style="cursor: pointer">
-              {user.name[0].toUpperCase()}
-            </UserIcon>
-          </UserWrapper>
+            {isMe ? <EditMyInfo /> : <UserProfile user={user} />}
+          </FABToggle>
         );
       })}
     </Container>
@@ -49,9 +58,12 @@ const UserWrapper = styled.div<{ isBackground: boolean }>`
   height: 30px;
   border-radius: 8px;
 
+  transition: transform 0.2s ease-in-out;
   &:hover {
     transform: scale(1.03);
-    transition: transform 0.2s;
+  }
+  &:active {
+    transform: scale(0.98);
   }
 `;
 

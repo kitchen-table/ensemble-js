@@ -22,10 +22,14 @@ class MyInfoStorage {
     this.myInfoSignal.value = myInfo;
   }
 
-  get(): MyInfo {
+  private get(): MyInfo {
     const myInfo = this.myInfoSignal.peek();
     invariant(myInfo, 'myInfo is null');
     return myInfo;
+  }
+
+  isMyId(userId: string) {
+    return this.get().id === userId;
   }
 }
 
