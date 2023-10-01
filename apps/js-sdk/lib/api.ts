@@ -10,18 +10,15 @@ import {
 } from '@packages/api';
 import UsersStorage from 'storage/UsersStorage';
 import { TYPE, wire } from 'di';
-import MyInfoStorage from 'storage/MyInfoStorage';
 
 class Api {
   usersStorage!: UsersStorage;
-  myInfoStorage!: MyInfoStorage;
 
   private socket: Socket;
   private isReady: boolean = false;
 
   constructor() {
     wire(this, 'usersStorage', TYPE.USERS_STORAGE);
-    wire(this, 'myInfoStorage', TYPE.MY_INFO_STORAGE);
 
     this.socket = io('http://localhost:3000');
     this.init().then(() => (this.isReady = true));
@@ -42,9 +39,7 @@ class Api {
     if (!this.isReady) {
       throw new Error('Api is not ready');
     }
-    const loginOutput: GuestLoginOutput = await this.socket.emitWithAck(EventType.GUEST_LOGIN, {});
-    this.myInfoStorage.save(loginOutput.myInfo);
-    return loginOutput;
+    return await this.socket.emitWithAck(EventType.GUEST_LOGIN, {});
   }
 
   joinRoom(roomId: string) {

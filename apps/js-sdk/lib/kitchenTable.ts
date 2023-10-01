@@ -5,6 +5,8 @@ import Cursor from 'ui/Cursor';
 import Message from 'ui/Message';
 import { TYPE, wire } from 'di';
 import Fab from 'ui/FAB';
+import MyInfoStorage from 'storage/MyInfoStorage';
+import { User } from '@packages/api';
 
 class KitchenTable {
   roomId: string;
@@ -15,6 +17,7 @@ class KitchenTable {
   message!: Message;
   sendEventBinder!: SendEventBinder;
   receiveEventListener!: ReceiveEventListener;
+  myInfoStorage!: MyInfoStorage;
 
   constructor() {
     wire(this, 'api', TYPE.API);
@@ -23,6 +26,7 @@ class KitchenTable {
     wire(this, 'message', TYPE.MESSAGE);
     wire(this, 'sendEventBinder', TYPE.SEND_EVENT_BINDER);
     wire(this, 'receiveEventListener', TYPE.RECEIVE_EVENT_LISTENER);
+    wire(this, 'myInfoStorage', TYPE.MY_INFO_STORAGE);
 
     // TODO: hash에 설정된 roomId가 있으면 가져오기
     this.roomId = window.location.origin + window.location.pathname;
@@ -35,7 +39,10 @@ class KitchenTable {
   }
 
   private async setup() {
-    const { myInfo } = await this.api.login({ roomId: this.roomId });
+    const loginOutput = await this.api.login({ roomId: this.roomId });
+    const myInfo = this.mergeWithSavedMyInfo(loginOutput.myInfo);
+    this.myInfoStorage.save(myInfo);
+
     await this.api.getUserList({ roomId: this.roomId });
 
     this.cursor.setUserCursor(myInfo.color);
@@ -50,6 +57,24 @@ class KitchenTable {
     window.addEventListener('locationchange', () => {
       this.cleanup();
     });
+  }
+
+  private mergeWithSavedMyInfo(myInfo: User) {
+    const savedMyInfo = this.myInfoStorage.get();
+    if (!savedMyInfo) {
+      this.myInfoStorage.save(myInfo);
+      return myInfo;
+    }
+
+    this.api.updateMyInfo({
+      name: savedMyInfo.name,
+      color: savedMyInfo.color,
+    });
+    return {
+      ...myInfo,
+      color: savedMyInfo.color,
+      name: savedMyInfo.name,
+    };
   }
 
   cleanup() {
