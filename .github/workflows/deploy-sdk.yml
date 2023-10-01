@@ -11,7 +11,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  deploy-sdk:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,10 +31,10 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Build Website
+      - name: Build SDK
         run: pnpm build
 
       - uses: actions/upload-artifact@v3
         with:
           name: sdk
-          path: apps/js-sdk/dist/@kitchen-table/
+          path: apps/js-sdk/dist/@kitchen-table/js-sdk.es.js
