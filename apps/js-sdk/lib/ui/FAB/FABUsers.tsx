@@ -59,7 +59,7 @@ export default function FABUsers() {
                   content: '';
                   width: 100%;
                   height: 100%;
-                  backdrop-filter: grayscale(${isBackground ? 0.2 : 0});
+                  backdrop-filter: grayscale(${isBackground ? 0.4 : 0});
                 }
               `}
             >

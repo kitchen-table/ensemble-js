@@ -1,4 +1,4 @@
-import { ComponentChild, ComponentChildren, JSX } from 'preact';
+import { ComponentChild, ComponentChildren } from 'preact';
 import { css } from '@emotion/css';
 import { useEffect, useRef } from 'preact/compat';
 import { signal } from '@preact/signals';

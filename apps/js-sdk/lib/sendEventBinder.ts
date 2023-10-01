@@ -5,11 +5,14 @@ import Cursor from 'ui/Cursor';
 import { TYPE, wire } from 'di';
 import Fab from 'ui/FAB';
 import Message from 'ui/Message';
+import MyInfoStorage from 'storage/MyInfoStorage';
+import { ELEMENT_SELECTOR } from 'utils/constants';
 
 type EventKey = keyof DocumentEventMap;
 
 class SendEventBinder {
   api!: Api;
+  myInfoStorage!: MyInfoStorage;
   events: Map<EventKey, Function> = new Map();
 
   constructor() {
@@ -17,9 +20,9 @@ class SendEventBinder {
 
     const api = this.api;
 
-    function emitMoveEvent(event: PointerEvent | MouseEvent) {
+    const emitMoveEvent = (event: PointerEvent) => {
       api.emit(EventType.POINTER_MOVE, onMove(event));
-    }
+    };
     function emitPointerClickEvent(event: PointerEvent) {
       // @ts-ignore
       if (event.isKitchenTableEvent) {
@@ -33,6 +36,7 @@ class SendEventBinder {
     }
     function emitIsBackgroundEvent() {
       api.emit(EventType.UPDATE_MY_INFO, { isBackground: document.hidden });
+      api.emit(EventType.POINTER_MOVE, { element: ELEMENT_SELECTOR.HIDE, x: 0, y: 0 });
     }
 
     this.events.set('mousemove', emitMoveEvent);
@@ -54,47 +58,39 @@ class SendEventBinder {
   }
 }
 
-function onMove(event: PointerEvent | MouseEvent) {
-  if (!(event.target instanceof HTMLElement) || isIgnoreMoveElement(event.target)) {
-    return {
-      element: finder(document.body),
-      x: event.clientX,
-      y: event.clientY,
-    };
-  }
+const onMove = handleFallback((event) => {
   const element = finder(event.target);
   const rect = event.target.getBoundingClientRect();
   const x = event.clientX - rect.left; //x position within the element.
   const y = event.clientY - rect.top; //y position within the element.
 
   return { element, x, y };
-}
+});
 
-function onPointerClick(event: PointerEvent) {
-  if (!(event.target instanceof HTMLElement) || isIgnoreClickElement(event.target)) {
-    return {
-      element: finder(document.body),
-      x: event.clientX,
-      y: event.clientY,
-    };
-  }
+const onPointerClick = handleFallback((event) => {
   const element = finder(event.target);
   const rect = event.target.getBoundingClientRect();
   const x = event.clientX - rect.left; //x position within the element.
   const y = event.clientY - rect.top; //y position within the element.
 
   return { element, x, y };
+});
+
+function handleFallback<R>(eventHandler: (event: PointerEvent & { target: HTMLElement }) => R) {
+  return (event: PointerEvent) => {
+    if (!(event.target instanceof HTMLElement) || isIgnoreElement(event.target)) {
+      return {
+        element: ELEMENT_SELECTOR.HIDE,
+        x: event.clientX,
+        y: event.clientY,
+      };
+    }
+    return eventHandler(event as PointerEvent & { target: HTMLElement });
+  };
 }
 
-const isIgnoreMoveElement = (element: HTMLElement) => {
-  return (
-    // Fab.hasThis(element) ||
-    Message.hasThis(element) || Cursor.hasThis(element)
-  );
-};
-
-const isIgnoreClickElement = (element: HTMLElement) => {
-  return Fab.hasThis(element) || Message.hasThis(element) || Cursor.hasThis(element);
+const isIgnoreElement = (target: HTMLElement) => {
+  return Fab.hasThis(target) || Message.hasThis(target) || Cursor.hasThis(target);
 };
 
 export default SendEventBinder;

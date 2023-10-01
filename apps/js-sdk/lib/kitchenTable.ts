@@ -29,6 +29,7 @@ class KitchenTable {
   }
 
   async init() {
+    console.log('%c 😀 init kitchen-table!', 'background: #222; color: #bada55');
     await this.api.init();
     await this.setup();
   }
