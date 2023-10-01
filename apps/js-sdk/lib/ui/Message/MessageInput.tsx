@@ -1,5 +1,4 @@
 import Message from 'ui/Message/index';
-import { css } from '@emotion/css';
 import { ChangeEvent, useEffect, useRef } from 'preact/compat';
 import { useSignal } from '@preact/signals';
 
@@ -68,22 +67,21 @@ export default function MessageInput() {
     <div
       id={Message.inputContainerId}
       ref={containerRef}
-      className={css`
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        position: absolute;
-
-        z-index: 1000;
-        background-color: white;
-        white-space: pre-wrap;
-        transition: opacity 0.2s ease-in-out;
-        opacity: ${opacitySignal.value};
-        border-radius: 8px;
-        padding: 8px;
-        line-height: 1.5;
-        border: 1px solid #ccc;
-      `}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        position: 'absolute',
+        zIndex: 1000,
+        backgroundColor: 'white',
+        whiteSpace: 'pre-wrap',
+        transition: 'opacity 0.2s ease-in-out',
+        opacity: opacitySignal.value,
+        borderRadius: '8px',
+        padding: '8px',
+        lineHeight: '1.5',
+        border: '1px solid #ccc',
+      }}
     >
       <form
         tabIndex={-1}
@@ -102,15 +100,15 @@ export default function MessageInput() {
           ref={inputRef}
           onChange={onInputChange}
           onBlur={closeInput}
-          className={css`
-            padding: 0;
-            outline: none;
-            border: none;
-            overflow: hidden;
-            resize: none;
-            word-break: break-all;
-            font-size: 14px;
-          `}
+          style={{
+            padding: 0,
+            outline: 'none',
+            border: 'none',
+            overflow: 'hidden',
+            resize: 'none',
+            wordBreak: 'break-all',
+            fontSize: '14px',
+          }}
           maxLength={50}
           name="message"
           placeholder="Message..."
@@ -121,14 +119,14 @@ export default function MessageInput() {
       </form>
       <div
         tabIndex={-1}
-        className={css`
-          font-size: 14px;
-          overflow: visible;
-          word-break: break-all;
-          transition: all 0.5s ease-in-out;
-          opacity: ${showPrevMessageSignal.value ? 1 : 0};
-          max-height: ${showPrevMessageSignal.value ? '300px' : 0};
-        `}
+        style={{
+          fontSize: '14px',
+          overflow: 'visible',
+          wordBreak: 'break-all',
+          transition: 'all 0.5s ease-in-out',
+          opacity: showPrevMessageSignal.value ? 1 : 0,
+          maxHeight: showPrevMessageSignal.value ? '300px' : 0,
+        }}
       >
         {Message.messageSignal.value}
       </div>

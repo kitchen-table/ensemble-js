@@ -1,17 +1,14 @@
-import { ComponentChild, ComponentChildren } from 'preact';
-import { css } from '@emotion/css';
+import { ComponentChild, ComponentChildren, JSX } from 'preact';
 import { useEffect, useRef } from 'preact/compat';
 import { signal } from '@preact/signals';
 import styled from 'ui/styled';
-import Fab from 'ui/FAB/index';
 import { resolve, TYPE } from 'di';
 
 type FABToggleProps = {
   icon: ComponentChild;
-  children: ComponentChildren;
-};
+} & Omit<JSX.IntrinsicElements['summary'], 'icon' | 'onClick'>;
 
-export default function FABToggle({ icon, children }: FABToggleProps) {
+export default function FABToggle({ icon, children, ...restProps }: FABToggleProps) {
   const getFab = resolve(TYPE.FAB);
   const openSignal = signal<boolean>(false);
   const detailsRef = useRef<HTMLDetailsElement>(null);
@@ -50,6 +47,7 @@ export default function FABToggle({ icon, children }: FABToggleProps) {
           event.preventDefault();
           openSignal.value = !openSignal.value;
         }}
+        {...restProps}
       >
         {icon}
       </Summary>
@@ -69,6 +67,7 @@ const Summary = styled.summary`
 
 const ContentWrapper = styled.div`
   position: absolute;
+  z-index: -1;
   right: 56px;
   border-radius: 8px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);

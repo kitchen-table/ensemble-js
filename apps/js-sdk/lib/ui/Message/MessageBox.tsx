@@ -1,6 +1,5 @@
 import Message from 'ui/Message/index';
 import { useEffect, useRef } from 'preact/compat';
-import { css } from '@emotion/css';
 import { useSignal } from '@preact/signals';
 
 const INITIAL_OPACITY = 8;
@@ -34,20 +33,20 @@ export default function MessageBox({ id, color }: { id: string; color: string })
     <span
       ref={messageRef}
       id={`kitchen-table-cursor-message-${id}`}
-      className={css`
-        display: inline-block;
-        position: relative;
-        left: 20px;
-        background-color: ${opacitySignal.value === INITIAL_OPACITY ? color : 'white'};
-        transform: ${opacitySignal.value === INITIAL_OPACITY ? 'scale(1.05)' : 'scale(1)'};
-        transition: all 0.5s ease-in-out;
-        opacity: ${opacitySignal.value};
-        font-size: 14px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        padding: 8px;
-        line-height: 1.5;
-      `}
+      style={{
+        display: 'inline-block',
+        position: 'relative',
+        left: '20px',
+        backgroundColor: opacitySignal.value === INITIAL_OPACITY ? color : 'white',
+        transform: opacitySignal.value === INITIAL_OPACITY ? 'scale(1.05)' : 'scale(1)',
+        transition: 'all 0.5s ease-in-out',
+        opacity: opacitySignal.value,
+        fontSize: '14px',
+        border: '1px solid #ccc',
+        borderRadius: '8px',
+        padding: '8px',
+        lineHeight: '1.5',
+      }}
     >
       {message}
     </span>

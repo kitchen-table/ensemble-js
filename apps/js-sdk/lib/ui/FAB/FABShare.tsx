@@ -12,6 +12,9 @@ export default function FABShare() {
 
   return (
     <FABToggle
+      aria-label="Share"
+      role="tooltip"
+      data-microtip-position="left"
       icon={
         <FABIcon onClick={share}>
           <ShareIcon color={'rgba(0,0,0,0.8)'} />

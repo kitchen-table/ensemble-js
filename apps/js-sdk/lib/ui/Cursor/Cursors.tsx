@@ -1,5 +1,4 @@
 import Cursor from 'ui/Cursor/index';
-import { css } from '@emotion/css';
 import MessageBox from 'ui/Message/MessageBox';
 
 export default function Cursors() {
@@ -10,19 +9,19 @@ export default function Cursors() {
           <div
             key={cursor.id}
             id={`kitchen-table-cursor-${cursor.id}`}
-            className={css`
-              position: absolute;
-              top: ${cursor.y - 2}px;
-              left: ${cursor.x - 2}px;
-              pointer-events: none;
-              z-index: 9999;
-            `}
+            style={{
+              position: 'absolute',
+              top: cursor.y - 2,
+              left: cursor.x - 2,
+              pointerEvents: 'none',
+              zIndex: 9999,
+            }}
           >
             <div
-              className={css`
-                width: ${Cursor.size}px;
-                height: ${Cursor.size}px;
-              `}
+              style={{
+                width: `${Cursor.size}px`,
+                height: `${Cursor.size}px`,
+              }}
               dangerouslySetInnerHTML={{
                 __html: Cursor.getCursorSVG(cursor.color),
               }}

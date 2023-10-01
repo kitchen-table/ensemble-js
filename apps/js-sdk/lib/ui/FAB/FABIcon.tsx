@@ -7,8 +7,8 @@ type FABIconProps = {
 
 export default function FABIcon({ children, ...restProps }: FABIconProps) {
   return (
-    <Container {...restProps}>
-      <SvgWrapper>{children}</SvgWrapper>
+    <Container tabIndex={-1} {...restProps}>
+      <SvgWrapper tabIndex={-1}>{children}</SvgWrapper>
     </Container>
   );
 }

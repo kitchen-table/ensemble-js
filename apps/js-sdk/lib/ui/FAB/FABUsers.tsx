@@ -16,8 +16,10 @@ export default function FABUsers() {
         return (
           <UserWrapper
             key={user.id}
+            aria-label={`${user.name}${isMe ? ' (You)' : ''}`}
+            data-microtip-position="left"
+            role="tooltip"
             id={`kitchen-table-fab-user-profile-${user.id}`}
-            aria-description={user.name}
             isBackground={isBackground}
           >
             <UserIcon isBackground={isBackground} color={user.color} style="cursor: pointer">
@@ -41,7 +43,6 @@ const UserWrapper = styled.div<{ isBackground: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
   border: 2px ${({ isBackground }) => (isBackground ? 'dashed' : 'solid')} #3d3939;
 
   width: 32px;
@@ -61,6 +62,7 @@ const UserIcon = styled.div<{ isBackground: boolean; color: User['color'] }>`
   align-items: center;
   background-color: ${({ color }) => color};
   color: ${({ color }) => getContrastColor(color)};
+  border-radius: 6px;
   width: 100%;
   height: 100%;
 

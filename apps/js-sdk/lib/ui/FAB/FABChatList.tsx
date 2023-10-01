@@ -1,4 +1,3 @@
-import { css } from '@emotion/css';
 import { useEffect, useRef } from 'preact/compat';
 import { resolve, TYPE } from 'di';
 import FABIcon from 'ui/FAB/FABIcon';
@@ -8,6 +7,9 @@ import styled from 'ui/styled';
 export default function FABChatList() {
   return (
     <FABToggle
+      aria-label="Chat List"
+      role="tooltip"
+      data-microtip-position="left"
       icon={
         <FABIcon>
           <ChatIcon color={'rgba(0,0,0,0.8)'} />

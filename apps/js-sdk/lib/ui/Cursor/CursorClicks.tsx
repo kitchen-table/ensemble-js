@@ -1,5 +1,5 @@
 import Cursor, { CursorData } from 'ui/Cursor/index';
-import { css, keyframes } from '@emotion/css';
+import { keyframes } from '@emotion/css';
 import { useEffect } from 'preact/compat';
 import { useSignal } from '@preact/signals';
 import useCursors from 'ui/Cursor/useCursors';
@@ -53,20 +53,20 @@ const CursorClick = ({ cursor }: { cursor: CursorData }) => {
 
   return (
     <div
-      className={css`
-        position: absolute;
-        pointer-events: none;
-        z-index: 1001;
-        left: ${cursor.x - 10}px;
-        top: ${cursor.y - 10}px;
-        background-color: ${cursor.color};
-        transition: all 0.2s;
-        opacity: 0.5;
-        border-radius: 50%;
-        width: 14px;
-        height: 14px;
-        animation: ${minimize} 1s ease forwards;
-      `}
+      style={{
+        position: 'absolute',
+        top: cursor.y - 10,
+        left: cursor.x - 10,
+        pointerEvents: 'none',
+        zIndex: 1001,
+        opacity: 0.5,
+        backgroundColor: cursor.color,
+        transition: 'all 0.2s',
+        borderRadius: '50%',
+        width: 14,
+        height: 14,
+        animation: `${minimize} 1s ease forwards`,
+      }}
     />
   );
 };
