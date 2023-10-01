@@ -1,0 +1,40 @@
+name: Deploy SDK
+
+concurrency:
+  group: deploy-sdk
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build Website
+        run: pnpm build
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: sdk
+          path: apps/js-sdk/dist/@kitchen-table/
