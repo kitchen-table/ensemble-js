@@ -7,14 +7,17 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 const name = packageJson.name;
 
+const isDev = process.env.NODE_ENV === 'development';
+
 export default defineConfig({
   plugins: [tsconfigPaths(), svgr(), preact()],
   build: {
-    minify: process.env.NODE_ENV !== 'development',
+    minify: !isDev,
     lib: {
       entry: resolve(__dirname, 'lib/main.ts'),
       name,
       fileName: (format) => `${name}.${format}.js`,
     },
   },
+  define: { 'process.env.NODE_ENV': isDev ? '"development"' : '"production"' },
 });

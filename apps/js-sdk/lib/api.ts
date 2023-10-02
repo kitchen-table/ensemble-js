@@ -20,7 +20,9 @@ class Api {
   constructor() {
     wire(this, 'usersStorage', TYPE.USERS_STORAGE);
 
-    this.socket = io('http://localhost:3000');
+    this.socket = io('http://localhost:3000', {
+      transports: ['websocket'],
+    });
     this.init().then(() => (this.isReady = true));
   }
 
