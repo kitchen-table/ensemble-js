@@ -3,7 +3,7 @@ FROM node:alpine as EXPORTER
 WORKDIR /app
 RUN apk update && yarn global add turbo
 COPY . .
-RUN turbo prune --scope @kitchen-table/backend
+RUN turbo prune --scope @kitchen-table/backend --docker
 
 # ▼ Build application
 FROM node:alpine as BUILDER
