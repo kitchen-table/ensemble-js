@@ -18,7 +18,7 @@ const httpServer = createServer((req, res) => {
   if (req.url === '/sdk.es.js') {
     const sdkPath = path.resolve('..', 'js-sdk', 'dist', '@kitchen-table', 'js-sdk.es.js');
     fs.readFile(sdkPath, (err, data) => {
-      res.writeHead(200, { 'Content-Type': 'text/javascript' });
+      res.writeHead(200, { 'Content-Type': 'text/javascript', 'Access-Control-Allow-Origin': '*' });
       res.write(data);
       res.end();
     });
