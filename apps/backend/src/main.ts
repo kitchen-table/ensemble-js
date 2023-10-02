@@ -10,8 +10,21 @@ import { onRoomUserList } from './events/room-user-list';
 import { onUpdateMyInfo } from './events/update-my-info';
 import { onGuestLogin } from './events/guest-login';
 import { EventType, RoomLeaveOutput, User } from '@packages/api';
+import * as fs from 'fs';
+import * as path from 'path';
 
-const httpServer = createServer();
+const httpServer = createServer((req, res) => {
+  // TODO temporary serving solution
+  if (req.url === '/sdk.es.js') {
+    const sdkPath = path.resolve('..', 'js-sdk', 'dist', '@kitchen-table', 'js-sdk.es.js');
+    fs.readFile(sdkPath, (err, data) => {
+      res.writeHead(200, { 'Content-Type': 'text/javascript' });
+      res.write(data);
+      res.end();
+    });
+  }
+});
+
 const io = new Server(httpServer, { cors: { origin: '*', methods: ['GET', 'POST'] } });
 
 io.on('connection', (socket) => {

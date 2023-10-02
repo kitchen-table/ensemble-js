@@ -1,7 +1,6 @@
 {
   "name": "@kitchen-table/playground",
   "scripts": {
-    "build": "vite build",
     "dev": "vite"
   },
   "devDependencies": {
