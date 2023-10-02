@@ -16,11 +16,10 @@ import * as path from 'path';
 const httpServer = createServer((req, res) => {
   // TODO temporary serving solution
   if (req.url === '/sdk.es.js') {
-    const sdkPath = path.resolve('..', 'js-sdk', 'dist', '@kitchen-table', 'js-sdk.es.js');
+    const sdkPath = path.resolve(process.cwd(), 'apps', 'js-sdk', 'dist', '@kitchen-table', 'js-sdk.es.js');
     fs.readFile(sdkPath, (err, data) => {
-      console.error(err, fs.readdirSync(path.resolve('..', 'js-sdk', 'dist', '@kitchen-table')));
       res.writeHead(200, { 'Content-Type': 'text/javascript', 'Access-Control-Allow-Origin': '*' });
-      data && res.write(data);
+      res.write(data);
       res.end();
     });
   }
