@@ -10,6 +10,7 @@ import Cursor from 'ui/Cursor';
 import Fab from 'ui/FAB';
 import UsersStorage from 'storage/UsersStorage';
 import Message from 'ui/Message';
+import ScriptManager from 'scriptManager';
 
 function containerBind() {
   /**
@@ -28,6 +29,11 @@ function containerBind() {
     .bind<ReceiveEventListener>(TYPE.RECEIVE_EVENT_LISTENER)
     .to(ReceiveEventListener)
     .inSingletonScope();
+
+  /**
+   * etc
+   */
+  container.bind<ScriptManager>(TYPE.SCRIPT_MANAGER).to(ScriptManager);
 
   /**
    * ui

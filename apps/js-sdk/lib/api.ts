@@ -10,19 +10,18 @@ import {
 } from '@packages/api';
 import UsersStorage from 'storage/UsersStorage';
 import { TYPE, wire } from 'di';
+import ScriptManager from 'scriptManager';
 
 class Api {
+  scriptManager!: ScriptManager;
   usersStorage!: UsersStorage;
 
-  private socket: Socket;
+  private socket!: Socket;
   private isReady: boolean = false;
 
   constructor() {
+    wire(this, 'scriptManager', TYPE.SCRIPT_MANAGER);
     wire(this, 'usersStorage', TYPE.USERS_STORAGE);
-
-    this.socket = io('http://localhost:3000', {
-      transports: ['websocket'],
-    });
   }
 
   retryConnect(callback?: () => unknown) {
@@ -45,16 +44,19 @@ class Api {
   }
 
   async init(): Promise<Api> {
+    const url = this.scriptManager.getServerUrl();
+    this.socket = io(url, { transports: ['websocket'] });
+
     return new Promise((resolve, reject) => {
       if (this.isReady) {
         resolve(this);
         return;
       }
-      this.socket.on('connect', () => {
+      this.socket.once('connect', () => {
         this.isReady = true;
         resolve(this);
       });
-      this.socket.on('connect_error', reject);
+      this.socket.once('connect_error', reject);
     });
   }
 
