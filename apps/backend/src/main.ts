@@ -37,4 +37,5 @@ io.on('connection', (socket) => {
   });
 });
 
-httpServer.listen(3000, () => Logger.log('Listening on port 3000'));
+const PORT = process.env.PORT || 8080;
+httpServer.listen(PORT, () => Logger.log(`Listening on port ${PORT}`));
