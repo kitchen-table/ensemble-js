@@ -2,6 +2,7 @@
   "name": "@kitchen-table/backend",
   "scripts": {
     "build": "tsc",
+    "start": "node dist/main.js",
     "dev": "ts-node src/main.ts"
   },
   "dependencies": {

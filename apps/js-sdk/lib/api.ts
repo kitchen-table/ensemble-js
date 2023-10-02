@@ -23,7 +23,25 @@ class Api {
     this.socket = io('http://localhost:3000', {
       transports: ['websocket'],
     });
-    this.init().then(() => (this.isReady = true));
+  }
+
+  retryConnect(callback?: () => unknown) {
+    let interval: number | undefined;
+    const onDisconnect = () => {
+      this.isReady = false;
+      interval = window.setInterval(() => {
+        this.socket.connect();
+      }, 1000);
+    };
+
+    this.socket.on('disconnect', onDisconnect);
+
+    this.socket.on('connect', async () => {
+      clearInterval(interval);
+      await this.login({});
+      this.isReady = true;
+      callback?.();
+    });
   }
 
   async init(): Promise<Api> {
@@ -32,7 +50,10 @@ class Api {
         resolve(this);
         return;
       }
-      this.socket.on('connect', () => resolve(this));
+      this.socket.on('connect', () => {
+        this.isReady = true;
+        resolve(this);
+      });
       this.socket.on('connect_error', reject);
     });
   }

@@ -34,32 +34,31 @@ class KitchenTable {
 
   async init() {
     console.log('%c 😀 init kitchen-table!', 'background: #222; color: #bada55');
+
     await this.api.init();
-    await this.setup();
+    await this.setUsers();
+
+    this.api.retryConnect(() => this.setUsers());
+    this.bindEvents();
   }
 
-  private async setup() {
-    const loginOutput = await this.api.login({ roomId: this.roomId });
-    const myInfo = this.mergeWithSavedMyInfo(loginOutput.myInfo);
+  private async setUsers() {
+    const loginOutput = await this.api.login({});
+    const myInfo = this.mergeWithSavedLocalMyInfo(loginOutput.myInfo);
     this.myInfoStorage.save(myInfo);
-
-    await this.api.getUserList({ roomId: this.roomId });
-
     this.cursor.setUserCursor(myInfo.color);
 
-    this.sendEventBinder.bindNativeEventListener();
-    this.message.bindNativeEventHandler();
-
-    this.receiveEventListener.init();
+    await this.api.getUserList({ roomId: this.roomId });
     this.api.joinRoom(this.roomId);
-
-    // TODO: cleanup or re-init
-    window.addEventListener('locationchange', () => {
-      this.cleanup();
-    });
   }
 
-  private mergeWithSavedMyInfo(myInfo: User) {
+  private bindEvents() {
+    this.sendEventBinder.bindNativeEventListener();
+    this.message.bindNativeEventHandler();
+    this.receiveEventListener.init();
+  }
+
+  private mergeWithSavedLocalMyInfo(myInfo: User) {
     const savedMyInfo = this.myInfoStorage.get();
     if (!savedMyInfo) {
       this.myInfoStorage.save(myInfo);
