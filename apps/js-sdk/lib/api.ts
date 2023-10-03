@@ -100,7 +100,7 @@ class Api {
 
   emit(event: string, payload: any) {
     if (!this.isReady) {
-      throw new Error('Api is not ready');
+      console.error('Api is not ready');
     }
     this.socket.emit(event, payload);
   }
