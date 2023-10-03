@@ -24,6 +24,12 @@ class Config {
     }
     return Number(customThrottle);
   }
+
+  getRoomId() {
+    const roomId = this.findScript().getAttribute('data-room-id');
+    const defaultRoomId = window.location.origin + window.location.pathname;
+    return roomId ?? defaultRoomId;
+  }
 }
 
 export default Config;

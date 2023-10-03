@@ -8,12 +8,12 @@ import Fab from 'ui/FAB';
 import MyInfoStorage from 'storage/MyInfoStorage';
 import { User } from '@packages/api';
 import invariant from 'ts-invariant';
+import Config from 'config';
 
 class KitchenTable {
-  roomId: string;
-
   api!: Api;
   fab!: Fab;
+  config!: Config;
   cursor!: Cursor;
   message!: Message;
   sendEventBinder!: SendEventBinder;
@@ -24,13 +24,11 @@ class KitchenTable {
     wire(this, 'api', TYPE.API);
     wire(this, 'fab', TYPE.FAB);
     wire(this, 'cursor', TYPE.CURSOR);
+    wire(this, 'config', TYPE.CONFIG);
     wire(this, 'message', TYPE.MESSAGE);
     wire(this, 'sendEventBinder', TYPE.SEND_EVENT_BINDER);
     wire(this, 'receiveEventListener', TYPE.RECEIVE_EVENT_LISTENER);
     wire(this, 'myInfoStorage', TYPE.MY_INFO_STORAGE);
-
-    // TODO: hash에 설정된 roomId가 있으면 가져오기
-    this.roomId = window.location.origin + window.location.pathname;
   }
 
   async init() {
@@ -49,8 +47,8 @@ class KitchenTable {
     this.myInfoStorage.save(myInfo);
     this.cursor.setUserCursor(myInfo.color);
 
-    await this.api.getUserList({ roomId: this.roomId });
-    this.api.joinRoom(this.roomId);
+    await this.api.getUserList({ roomId: this.config.getRoomId() });
+    this.api.joinRoom(this.config.getRoomId());
   }
 
   private bindEvents() {
@@ -78,7 +76,7 @@ class KitchenTable {
   }
 
   cleanup() {
-    this.api?.leave({ roomId: this.roomId });
+    this.api?.leave({ roomId: this.config.getRoomId() });
     this.cursor.restoreUserCursor();
     this.sendEventBinder.unbindNativeEventListener();
     this.message.unbindNativeEventHandler();
