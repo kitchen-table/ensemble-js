@@ -58,7 +58,10 @@ class Message {
     }
 
     const onPointerMove = (e: PointerEvent) => {
-      this.mousePositionSignal.value = { x: e.clientX, y: e.clientY };
+      this.mousePositionSignal.value = {
+        x: e.clientX + window.scrollX,
+        y: e.clientY + window.scrollY,
+      };
     };
 
     this.addMessageSubmitEffect();
