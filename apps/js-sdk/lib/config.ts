@@ -19,7 +19,7 @@ class Config {
 
   getMoveEventThrottleMs() {
     const customThrottle = this.findScript().getAttribute('data-move-event-throttle');
-    if (Number.isNaN(customThrottle)) {
+    if (!customThrottle || Number.isNaN(customThrottle)) {
       return 30; // as default
     }
     return Number(customThrottle);
