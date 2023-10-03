@@ -37,7 +37,6 @@ class Api {
 
     this.socket.on('connect', async () => {
       clearInterval(interval);
-      await this.login({});
       this.isReady = true;
       callback?.();
     });
