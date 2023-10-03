@@ -1,4 +1,3 @@
-import { finder } from '@medv/finder';
 import Api from './api';
 import { EventType } from '@packages/api';
 import Cursor from 'ui/Cursor';
@@ -7,6 +6,7 @@ import Fab from 'ui/FAB';
 import Message from 'ui/Message';
 import MyInfoStorage from 'storage/MyInfoStorage';
 import { ELEMENT_SELECTOR } from 'utils/constants';
+import { elementFinder } from 'utils/elementFinder';
 
 type EventKey = keyof DocumentEventMap;
 
@@ -59,7 +59,7 @@ class SendEventBinder {
 }
 
 const onMove = handleFallback((event) => {
-  const element = finder(event.target);
+  const element = elementFinder(event.target);
   const rect = event.target.getBoundingClientRect();
   const x = event.clientX - rect.left; //x position within the element.
   const y = event.clientY - rect.top; //y position within the element.
@@ -68,7 +68,7 @@ const onMove = handleFallback((event) => {
 });
 
 const onPointerClick = handleFallback((event) => {
-  const element = finder(event.target);
+  const element = elementFinder(event.target);
   const rect = event.target.getBoundingClientRect();
   const x = event.clientX - rect.left; //x position within the element.
   const y = event.clientY - rect.top; //y position within the element.

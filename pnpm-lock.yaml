@@ -76,6 +76,9 @@ importers:
       '@svgr/rollup':
         specifier: 8.1.0
         version: 8.1.0(typescript@5.2.2)
+      css-selector-generator:
+        specifier: 3.6.4
+        version: 3.6.4
       preact:
         specifier: 10.17.1
         version: 10.17.1
@@ -2301,6 +2304,10 @@ packages:
       domhandler: 5.0.3
       domutils: 3.1.0
       nth-check: 2.1.1
+    dev: false
+
+  /css-selector-generator@3.6.4:
+    resolution: {integrity: sha512-/VDUW5KAoxGXJPNcn+5Y0DLJMQumLk9zNMWl2NChuTwGLEFeqfnddCpRhY6uZ77ar0uyM7W7ilvIWsk7DpjKxQ==}
     dev: false
 
   /css-tree@2.2.1:

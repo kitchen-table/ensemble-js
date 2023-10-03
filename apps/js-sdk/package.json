@@ -27,6 +27,7 @@
     "@preact/preset-vite": "2.5.0",
     "@preact/signals": "1.2.1",
     "@svgr/rollup": "8.1.0",
+    "css-selector-generator": "3.6.4",
     "preact": "10.17.1",
     "socket.io-client": "4.7.2",
     "ts-invariant": "0.10.3"
