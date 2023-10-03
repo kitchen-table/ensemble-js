@@ -12,6 +12,10 @@ class ScriptManager {
     invariant(url, 'url is required');
     return url;
   }
+
+  isActivateExperimental() {
+    return this.findScript().getAttribute('data-experimental') === 'true';
+  }
 }
 
 export default ScriptManager;

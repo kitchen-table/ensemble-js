@@ -3,6 +3,8 @@ import { render } from 'preact';
 import Cursors from 'ui/Cursor/Cursors';
 import CursorClicks from 'ui/Cursor/CursorClicks';
 import invariant from 'ts-invariant';
+import ScriptManager from 'scriptManager';
+import { TYPE, wire } from 'di';
 
 export type CursorData = {
   id: string;
@@ -18,6 +20,8 @@ class Cursor {
   static cursorSignals: Signal<CursorData[]> = signal([]);
   static cursorClickSignals: Signal<CursorData[]> = signal([]);
 
+  scriptManager!: ScriptManager;
+
   static getCursorSVG(color: string, isMyCursor?: boolean) {
     return `
     <svg fill="#E2E2E2" width="${this.size}px" height="${this.size}px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -27,6 +31,8 @@ class Cursor {
   }
 
   constructor() {
+    wire(this, 'scriptManager', TYPE.SCRIPT_MANAGER);
+
     this.mount();
   }
 
@@ -94,17 +100,19 @@ class Cursor {
      * @experimental
      * This is a hack to make the click event work on the remote cursor.
      */
-    const element = document.elementFromPoint(data.x, data.y);
-    if (element) {
-      const customEvent = new PointerEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        clientX: data.x,
-        clientY: data.y,
-      });
-      // @ts-ignore
-      customEvent.isKitchenTableEvent = true;
-      element.dispatchEvent(customEvent);
+    if (this.scriptManager.isActivateExperimental()) {
+      const element = document.elementFromPoint(data.x, data.y);
+      if (element) {
+        const customEvent = new PointerEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          clientX: data.x,
+          clientY: data.y,
+        });
+        // @ts-ignore
+        customEvent.isKitchenTableEvent = true;
+        element.dispatchEvent(customEvent);
+      }
     }
   }
 
