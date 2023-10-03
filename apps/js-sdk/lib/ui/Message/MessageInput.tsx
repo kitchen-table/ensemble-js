@@ -40,7 +40,9 @@ export default function MessageInput() {
     let interval: NodeJS.Timeout;
     if (Message.isVisibleSignal.value) {
       resetOpacity();
-      inputRef.current?.focus();
+      inputRef.current?.focus({
+        preventScroll: true,
+      });
       interval = setInterval(() => {
         if (opacitySignal.value > 0) {
           opacitySignal.value -= 0.3;

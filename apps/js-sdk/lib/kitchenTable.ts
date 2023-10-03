@@ -7,6 +7,7 @@ import { TYPE, wire } from 'di';
 import Fab from 'ui/FAB';
 import MyInfoStorage from 'storage/MyInfoStorage';
 import { User } from '@packages/api';
+import invariant from 'ts-invariant';
 
 class KitchenTable {
   roomId: string;
@@ -38,7 +39,7 @@ class KitchenTable {
     await this.api.init();
     await this.setUsers();
 
-    this.api.retryConnect(() => this.setUsers());
+    this.api.retryConnect(() => this.setUsers().catch(invariant.error));
     this.bindEvents();
   }
 
