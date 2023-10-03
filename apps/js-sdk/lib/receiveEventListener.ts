@@ -102,8 +102,8 @@ class ReceiveEventListener {
     const { top, left } = element.getBoundingClientRect();
     return {
       color: cursorUser.color,
-      x: data.x + left,
-      y: data.y + top,
+      x: data.x + left + window.scrollX,
+      y: data.y + top + window.scrollY,
     };
   }
 
