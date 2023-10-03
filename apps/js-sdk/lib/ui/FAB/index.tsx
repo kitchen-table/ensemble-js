@@ -6,7 +6,7 @@ import invariant from 'ts-invariant';
 import FABShare from 'ui/FAB/FABShare';
 import FABLeave from 'ui/FAB/FABLeave';
 import EmotionCacheProvider from 'ui/styled/EmotionCacheProvider';
-import tooltipCss from 'ui/styled/tooltipCss';
+import { normalizeCss, tooltipCss } from 'ui/styled/css';
 
 class Fab {
   private static containerId = 'kitchen-table-fab-container';
@@ -15,6 +15,7 @@ class Fab {
   constructor() {
     this.mount();
     this.addTooltip();
+    this.addNormalizer();
   }
 
   private mount() {
@@ -39,6 +40,12 @@ class Fab {
   private addTooltip() {
     const styleSheet = new CSSStyleSheet();
     styleSheet.replaceSync(tooltipCss);
+    this.getContainer().shadowRoot?.adoptedStyleSheets.push(styleSheet);
+  }
+
+  private addNormalizer() {
+    const styleSheet = new CSSStyleSheet();
+    styleSheet.replaceSync(normalizeCss);
     this.getContainer().shadowRoot?.adoptedStyleSheets.push(styleSheet);
   }
 

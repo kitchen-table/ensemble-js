@@ -3,6 +3,8 @@ import { resolve, TYPE } from 'di';
 import FABIcon from 'ui/FAB/FABIcon';
 import FABToggle from 'ui/FAB/FABToggle';
 import styled from 'ui/styled';
+import { getContrastColor } from 'utils/color';
+import { User } from '@packages/api';
 
 export default function FABChatList() {
   return (
@@ -84,11 +86,12 @@ const ChatMessageContainer = styled.div`
   display: flex;
 `;
 
-const ChatUserIcon = styled.div<{ bgColor: string }>`
+const ChatUserIcon = styled.div<{ bgColor: User['color'] }>`
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: ${({ bgColor }) => bgColor};
+  color: ${({ bgColor }) => getContrastColor(bgColor)};
   border: 1px solid #3d3939;
   min-width: 24px;
   max-width: 24px;

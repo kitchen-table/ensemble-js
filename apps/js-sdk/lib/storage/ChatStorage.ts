@@ -1,9 +1,10 @@
-import { effect, Signal, signal } from '@preact/signals';
+import { effect, signal } from '@preact/signals';
+import { User } from '@packages/api';
 
 type Chat = {
-  userId: string;
-  userName: string;
-  userColor: string;
+  userId: User['id'];
+  userName: User['name'];
+  userColor: User['color'];
   message: string;
   timestamp: number;
 };
