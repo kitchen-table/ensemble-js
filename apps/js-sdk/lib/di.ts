@@ -9,7 +9,7 @@ import Cursor from 'ui/Cursor';
 import UsersStorage from 'storage/UsersStorage';
 import Message from 'ui/Message';
 import Fab from 'ui/FAB';
-import ScriptManager from 'scriptManager';
+import Config from 'config';
 
 const container = new Container();
 const wire = createWire(container);
@@ -18,7 +18,7 @@ const resolve = createResolve(container);
 const TYPE = {
   KITCHEN_TABLE: token<KitchenTable>('KitchenTable'),
   API: token<Api>('Api'),
-  SCRIPT_MANAGER: token<ScriptManager>('ScriptManager'),
+  CONFIG: token<Config>('Config'),
   FAB: token<Fab>('Fab'),
   CURSOR: token<Cursor>('Cursor'),
   MESSAGE: token<Message>('Message'),

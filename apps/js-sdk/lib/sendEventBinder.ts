@@ -4,19 +4,21 @@ import Cursor from 'ui/Cursor';
 import { TYPE, wire } from 'di';
 import Fab from 'ui/FAB';
 import Message from 'ui/Message';
-import MyInfoStorage from 'storage/MyInfoStorage';
 import { ELEMENT_SELECTOR } from 'utils/constants';
 import { elementFinder } from 'utils/elementFinder';
+import { throttle } from 'utils/throttle';
+import Config from 'config';
 
 type EventKey = keyof DocumentEventMap;
 
 class SendEventBinder {
   api!: Api;
-  myInfoStorage!: MyInfoStorage;
+  config!: Config;
   events: Map<EventKey, Function> = new Map();
 
   constructor() {
     wire(this, 'api', TYPE.API);
+    wire(this, 'config', TYPE.CONFIG);
 
     const api = this.api;
 
@@ -39,8 +41,8 @@ class SendEventBinder {
       api.emit(EventType.POINTER_MOVE, { element: ELEMENT_SELECTOR.HIDE, x: 0, y: 0 });
     }
 
-    this.events.set('mousemove', emitMoveEvent);
-    this.events.set('pointermove', emitMoveEvent);
+    this.events.set('mousemove', throttle(emitMoveEvent, this.config.getMoveEventThrottleMs()));
+    this.events.set('pointermove', throttle(emitMoveEvent, this.config.getMoveEventThrottleMs()));
     this.events.set('click', emitPointerClickEvent);
     this.events.set('visibilitychange', emitIsBackgroundEvent);
   }

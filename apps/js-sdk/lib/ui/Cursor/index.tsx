@@ -3,7 +3,7 @@ import { render } from 'preact';
 import Cursors from 'ui/Cursor/Cursors';
 import CursorClicks from 'ui/Cursor/CursorClicks';
 import invariant from 'ts-invariant';
-import ScriptManager from 'scriptManager';
+import Config from 'config';
 import { TYPE, wire } from 'di';
 
 export type CursorData = {
@@ -20,7 +20,7 @@ class Cursor {
   static cursorSignals: Signal<CursorData[]> = signal([]);
   static cursorClickSignals: Signal<CursorData[]> = signal([]);
 
-  scriptManager!: ScriptManager;
+  config!: Config;
 
   static getCursorSVG(color: string, isMyCursor?: boolean) {
     return `
@@ -31,7 +31,7 @@ class Cursor {
   }
 
   constructor() {
-    wire(this, 'scriptManager', TYPE.SCRIPT_MANAGER);
+    wire(this, 'config', TYPE.CONFIG);
 
     this.mount();
   }
@@ -100,7 +100,7 @@ class Cursor {
      * @experimental
      * This is a hack to make the click event work on the remote cursor.
      */
-    if (this.scriptManager.isActivateExperimental()) {
+    if (this.config.getIsActivateExperimental()) {
       const element = document.elementFromPoint(data.x, data.y);
       if (element) {
         const customEvent = new PointerEvent('click', {

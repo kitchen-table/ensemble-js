@@ -10,7 +10,7 @@ import Cursor from 'ui/Cursor';
 import Fab from 'ui/FAB';
 import UsersStorage from 'storage/UsersStorage';
 import Message from 'ui/Message';
-import ScriptManager from 'scriptManager';
+import Config from 'config';
 import { setVerbosity } from 'ts-invariant';
 
 if (process.env.NODE_ENV !== 'development') {
@@ -38,7 +38,7 @@ function containerBind() {
   /**
    * etc
    */
-  container.bind<ScriptManager>(TYPE.SCRIPT_MANAGER).to(ScriptManager);
+  container.bind<Config>(TYPE.CONFIG).to(Config);
 
   /**
    * ui

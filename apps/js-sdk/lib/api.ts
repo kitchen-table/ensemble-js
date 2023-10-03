@@ -10,17 +10,17 @@ import {
 } from '@packages/api';
 import UsersStorage from 'storage/UsersStorage';
 import { TYPE, wire } from 'di';
-import ScriptManager from 'scriptManager';
+import Config from 'config';
 
 class Api {
-  scriptManager!: ScriptManager;
+  config!: Config;
   usersStorage!: UsersStorage;
 
   private socket!: Socket;
   private isReady: boolean = false;
 
   constructor() {
-    wire(this, 'scriptManager', TYPE.SCRIPT_MANAGER);
+    wire(this, 'config', TYPE.CONFIG);
     wire(this, 'usersStorage', TYPE.USERS_STORAGE);
   }
 
@@ -44,7 +44,7 @@ class Api {
   }
 
   async init(): Promise<Api> {
-    const url = this.scriptManager.getServerUrl();
+    const url = this.config.getServerUrl();
     this.socket = io(url, { transports: ['websocket'] });
 
     return new Promise((resolve, reject) => {

@@ -5,6 +5,7 @@ import invariant from 'ts-invariant';
 import Api from 'api';
 import { TYPE, wire } from 'di';
 import { EventType } from '@packages/api';
+import { throttle } from 'utils/throttle';
 
 type EventKey = keyof WindowEventMap;
 
@@ -68,7 +69,7 @@ class Message {
     this.addMousePositionEffect();
     this.events.set('keydown', onKeyDown);
     this.events.set('click', onClick);
-    this.events.set('pointermove', onPointerMove);
+    this.events.set('pointermove', throttle(onPointerMove, 10));
   }
 
   bindNativeEventHandler() {
