@@ -11,6 +11,11 @@ import Fab from 'ui/FAB';
 import UsersStorage from 'storage/UsersStorage';
 import Message from 'ui/Message';
 import ScriptManager from 'scriptManager';
+import { setVerbosity } from 'ts-invariant';
+
+if (process.env.NODE_ENV !== 'development') {
+  setVerbosity('error');
+}
 
 function containerBind() {
   /**

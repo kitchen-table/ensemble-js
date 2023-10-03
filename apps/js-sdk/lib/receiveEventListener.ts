@@ -60,28 +60,38 @@ class ReceiveEventListener {
 
   listenPointMove() {
     this.api.listen(EventType.POINTER_MOVE, (data: PointerMoveOutput) => {
-      const isMyEvent = this.myInfoStorage.isMyId(data.userId);
-      if (isMyEvent) {
-        return; // not my cursor
-      }
-      if (data.element === ELEMENT_SELECTOR.HIDE) {
+      try {
+        const isMyEvent = this.myInfoStorage.isMyId(data.userId);
+        if (isMyEvent) {
+          return; // not my cursor
+        }
+        if (data.element === ELEMENT_SELECTOR.HIDE) {
+          this.cursor.deleteCursor(data.userId);
+          return;
+        }
+        const cursorInfo = this.getCursorInfo(data);
+        this.cursor.moveCursor({ id: data.userId, ...cursorInfo });
+      } catch (e) {
         this.cursor.deleteCursor(data.userId);
-        return;
+        invariant.warn(e);
       }
-      const cursorInfo = this.getCursorInfo(data);
-      this.cursor.moveCursor({ id: data.userId, ...cursorInfo });
     });
   }
 
   listenPointClick() {
     this.api.listen(EventType.POINTER_CLICK, (data: PointerClickOutput) => {
-      if (data.element === ELEMENT_SELECTOR.HIDE) {
+      try {
+        if (data.element === ELEMENT_SELECTOR.HIDE) {
+          this.cursor.deleteCursor(data.userId);
+          return;
+        }
+        const cursorInfo = this.getCursorInfo(data);
+        const isMyEvent = this.myInfoStorage.isMyId(data.userId);
+        this.cursor.click({ id: window.crypto.randomUUID(), ...cursorInfo }, isMyEvent);
+      } catch (e) {
         this.cursor.deleteCursor(data.userId);
-        return;
+        invariant.warn(e);
       }
-      const cursorInfo = this.getCursorInfo(data);
-      const isMyEvent = this.myInfoStorage.isMyId(data.userId);
-      this.cursor.click({ id: window.crypto.randomUUID(), ...cursorInfo }, isMyEvent);
     });
   }
 
@@ -99,26 +109,34 @@ class ReceiveEventListener {
 
   listenChatMessage() {
     this.api.listen(EventType.CHAT_MESSAGE, (data: ChatMessageOutput) => {
-      const chatUser = this.usersStorage.get(data.userId);
-      invariant(chatUser, `user not found. userId: ${data.userId}`);
-      this.chatStorage.pushMessage({
-        userId: chatUser.id,
-        userName: chatUser.name,
-        userColor: chatUser.color,
-        message: data.message,
-      });
-      this.message.onMessageReceive(data.userId, data.message);
+      try {
+        const chatUser = this.usersStorage.get(data.userId);
+        invariant(chatUser, `user not found. userId: ${data.userId}`);
+        this.chatStorage.pushMessage({
+          userId: chatUser.id,
+          userName: chatUser.name,
+          userColor: chatUser.color,
+          message: data.message,
+        });
+        this.message.onMessageReceive(data.userId, data.message);
+      } catch (e) {
+        invariant.error(e);
+      }
     });
   }
 
   listenUpdateUserInfo() {
     this.api.listen(EventType.UPDATE_MY_INFO, (data: UpdateMyInfoOutput) => {
-      const isMyInfoUpdate = this.myInfoStorage.isMyId(data.myInfo.id);
-      if (isMyInfoUpdate) {
-        this.myInfoStorage.save(data.myInfo);
-        this.cursor.setUserCursor(data.myInfo.color);
+      try {
+        const isMyInfoUpdate = this.myInfoStorage.isMyId(data.myInfo.id);
+        if (isMyInfoUpdate) {
+          this.myInfoStorage.save(data.myInfo);
+          this.cursor.setUserCursor(data.myInfo.color);
+        }
+        this.usersStorage.update(data.myInfo);
+      } catch (e) {
+        invariant.error(e);
       }
-      this.usersStorage.update(data.myInfo);
     });
   }
 }
