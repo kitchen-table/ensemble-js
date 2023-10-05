@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <script id="kitchen-table-loader" data-url="http://localhost:8080" type="module" src="./entry.ts"></script>
+<!--<script id="kitchen-table-loader" data-url="https://kitchen-table-alpha-zr67h.ondigitalocean.app/" type="module" src="https://kitchen-table-alpha-zr67h.ondigitalocean.app/sdk.es.js"></script>-->
 <body>
 <h1>Head1</h1>
 <details>
@@ -17,6 +18,11 @@
 </label>
 <input type="text"/>
 <a href="#test">Link</a>
+<script>
+  if (Math.random() > 0.5) {
+    document.body.appendChild(document.createElement('input'))
+  }
+</script>
 
 </body>
 </html>
