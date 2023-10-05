@@ -25,5 +25,5 @@ export interface User {
   /**
    * 유저가 현재 접속중인 URL
    */
-  path: string | null;
+  path: string;
 }
