@@ -17,7 +17,7 @@ import ChatStorage from 'storage/ChatStorage';
 import Message from 'ui/Message';
 import { ELEMENT_SELECTOR } from 'utils/constants';
 
-class ReceiveEventListener {
+class ReceivingEvents {
   api!: Api;
   cursor!: Cursor;
   message!: Message;
@@ -36,7 +36,7 @@ class ReceiveEventListener {
     wire(this, 'chatStorage', TYPE.CHAT_STORAGE);
   }
 
-  init() {
+  listenAllEvents() {
     this.listenRoomJoin();
     this.listenRoomLeave();
     this.listenPointMove();
@@ -141,4 +141,4 @@ class ReceiveEventListener {
   }
 }
 
-export default ReceiveEventListener;
+export default ReceivingEvents;

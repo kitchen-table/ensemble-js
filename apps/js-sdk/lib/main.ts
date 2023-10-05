@@ -4,8 +4,8 @@ import KitchenTable from 'kitchenTable';
 import ChatStorage from 'storage/ChatStorage';
 import MyInfoStorage from 'storage/MyInfoStorage';
 import Api from 'api';
-import SendEventBinder from 'sendEventBinder';
-import ReceiveEventListener from 'receiveEventListener';
+import SendingEvents from 'sendingEvents';
+import ReceivingEvents from 'receivingEvents';
 import Cursor from 'ui/Cursor';
 import Fab from 'ui/FAB';
 import UsersStorage from 'storage/UsersStorage';
@@ -29,11 +29,8 @@ function containerBind() {
    * api & events
    */
   container.bind<Api>(TYPE.API).to(Api).inSingletonScope();
-  container.bind<SendEventBinder>(TYPE.SEND_EVENT_BINDER).to(SendEventBinder).inSingletonScope();
-  container
-    .bind<ReceiveEventListener>(TYPE.RECEIVE_EVENT_LISTENER)
-    .to(ReceiveEventListener)
-    .inSingletonScope();
+  container.bind<SendingEvents>(TYPE.SENDING_EVENTS).to(SendingEvents).inSingletonScope();
+  container.bind<ReceivingEvents>(TYPE.RECEIVING_EVENTS).to(ReceivingEvents).inSingletonScope();
 
   /**
    * etc
