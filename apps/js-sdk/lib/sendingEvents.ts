@@ -8,13 +8,18 @@ import { ELEMENT_SELECTOR } from 'utils/constants';
 import { elementFinder } from 'utils/elementFinder';
 import { throttle } from 'utils/throttle';
 import Config from 'config';
+import { getMyPath } from 'utils/userPath';
 
-type EventKey = keyof DocumentEventMap;
+type DocumentEventKey = keyof DocumentEventMap;
+type WindowEventKey = keyof WindowEventMap;
 
-class SendEventBinder {
+class SendingEvents {
   api!: Api;
   config!: Config;
-  events: Map<EventKey, Function> = new Map();
+  documentEvents: Map<DocumentEventKey, Function> = new Map();
+  windowEvents: Map<WindowEventKey, Function> = new Map();
+  schedulingEvents: Map<Function, number> = new Map();
+  scheduledEvents: number[] = [];
 
   constructor() {
     wire(this, 'api', TYPE.API);
@@ -41,21 +46,53 @@ class SendEventBinder {
       api.emit(EventType.POINTER_MOVE, { element: ELEMENT_SELECTOR.HIDE, x: 0, y: 0 });
     }
 
-    this.events.set('mousemove', throttle(emitMoveEvent, this.config.getMoveEventThrottleMs()));
-    this.events.set('pointermove', throttle(emitMoveEvent, this.config.getMoveEventThrottleMs()));
-    this.events.set('click', emitPointerClickEvent);
-    this.events.set('visibilitychange', emitIsBackgroundEvent);
+    function emitPathChangeEvent() {
+      let prevPath = '';
+      return () => {
+        if (prevPath === getMyPath()) {
+          return;
+        }
+        prevPath = getMyPath();
+        api.updateMyInfo({ path: getMyPath() });
+      };
+    }
+
+    this.documentEvents.set(
+      'mousemove',
+      throttle(emitMoveEvent, this.config.getMoveEventThrottleMs()),
+    );
+    this.documentEvents.set(
+      'pointermove',
+      throttle(emitMoveEvent, this.config.getMoveEventThrottleMs()),
+    );
+    this.documentEvents.set('click', emitPointerClickEvent);
+    this.documentEvents.set('visibilitychange', emitIsBackgroundEvent);
+    this.windowEvents.set('popstate', emitPathChangeEvent);
+    this.schedulingEvents.set(emitPathChangeEvent(), 500);
   }
 
-  bindNativeEventListener() {
-    this.events.forEach((callback, type) => {
+  registration() {
+    this.documentEvents.forEach((callback, type) => {
+      document.addEventListener(type, callback as any);
+    });
+    this.windowEvents.forEach((callback, type) => {
       window.addEventListener(type, callback as any);
+    });
+    this.schedulingEvents.forEach((ms, callback) => {
+      const interval = window.setInterval(callback, ms);
+      this.scheduledEvents.push(interval);
     });
   }
 
-  unbindNativeEventListener() {
-    this.events.forEach((callback, type) => {
+  unregister() {
+    this.documentEvents.forEach((callback, type) => {
+      document.removeEventListener(type, callback as any);
+    });
+    this.windowEvents.forEach((callback, type) => {
       window.removeEventListener(type, callback as any);
+    });
+    this.scheduledEvents.forEach((interval) => {
+      window.clearInterval(interval);
     });
   }
 }
@@ -95,4 +132,4 @@ const isIgnoreElement = (target: HTMLElement) => {
   return Fab.hasThis(target) || Message.hasThis(target) || Cursor.hasThis(target);
 };
 
-export default SendEventBinder;
+export default SendingEvents;

@@ -67,6 +67,7 @@ class Api {
   }
 
   joinRoom(roomId: string) {
+    // TODO add path
     this.emit(EventType.ROOM_JOIN, { roomId });
   }
 

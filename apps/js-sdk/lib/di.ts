@@ -1,8 +1,8 @@
 import { Container, createResolve, createWire, token } from '@owja/ioc';
 import KitchenTable from 'kitchenTable';
 import Api from 'api';
-import SendEventBinder from 'sendEventBinder';
-import ReceiveEventListener from 'receiveEventListener';
+import SendingEvents from 'sendingEvents';
+import ReceivingEvents from 'receivingEvents';
 import ChatStorage from 'storage/ChatStorage';
 import MyInfoStorage from 'storage/MyInfoStorage';
 import Cursor from 'ui/Cursor';
@@ -22,8 +22,8 @@ const TYPE = {
   FAB: token<Fab>('Fab'),
   CURSOR: token<Cursor>('Cursor'),
   MESSAGE: token<Message>('Message'),
-  SEND_EVENT_BINDER: token<SendEventBinder>('SendEventBinder'),
-  RECEIVE_EVENT_LISTENER: token<ReceiveEventListener>('ReceiveEventListener'),
+  SENDING_EVENTS: token<SendingEvents>('SendingEvents'),
+  RECEIVING_EVENTS: token<ReceivingEvents>('ReceivingEvents'),
   CHAT_STORAGE: token<ChatStorage>('ChatStorage'),
   MY_INFO_STORAGE: token<MyInfoStorage>('MyInfoStorage'),
   USERS_STORAGE: token<UsersStorage>('UsersStorage'),

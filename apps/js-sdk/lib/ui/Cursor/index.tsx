@@ -68,6 +68,10 @@ class Cursor {
   }
 
   deleteCursor(id: string) {
+    const index = Cursor.cursorSignals.value.findIndex((cursor) => cursor.id === id);
+    if (index === -1) {
+      return;
+    }
     Cursor.cursorSignals.value = Cursor.cursorSignals.value.filter((cursor) => cursor.id !== id);
   }
 

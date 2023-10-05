@@ -1,6 +1,6 @@
-import SendEventBinder from 'sendEventBinder';
+import SendingEvents from 'sendingEvents';
 import Api from 'api';
-import ReceiveEventListener from 'receiveEventListener';
+import ReceivingEvents from 'receivingEvents';
 import Cursor from 'ui/Cursor';
 import Message from 'ui/Message';
 import { TYPE, wire } from 'di';
@@ -16,8 +16,8 @@ class KitchenTable {
   config!: Config;
   cursor!: Cursor;
   message!: Message;
-  sendEventBinder!: SendEventBinder;
-  receiveEventListener!: ReceiveEventListener;
+  sendingEvents!: SendingEvents;
+  receivingEvents!: ReceivingEvents;
   myInfoStorage!: MyInfoStorage;
 
   constructor() {
@@ -26,8 +26,8 @@ class KitchenTable {
     wire(this, 'cursor', TYPE.CURSOR);
     wire(this, 'config', TYPE.CONFIG);
     wire(this, 'message', TYPE.MESSAGE);
-    wire(this, 'sendEventBinder', TYPE.SEND_EVENT_BINDER);
-    wire(this, 'receiveEventListener', TYPE.RECEIVE_EVENT_LISTENER);
+    wire(this, 'sendingEvents', TYPE.SENDING_EVENTS);
+    wire(this, 'receivingEvents', TYPE.RECEIVING_EVENTS);
     wire(this, 'myInfoStorage', TYPE.MY_INFO_STORAGE);
   }
 
@@ -38,7 +38,7 @@ class KitchenTable {
     await this.setUsers();
 
     this.api.retryConnect(() => this.setUsers().catch(invariant.error));
-    this.bindEvents();
+    this.setEvents();
   }
 
   private async setUsers() {
@@ -51,10 +51,10 @@ class KitchenTable {
     this.api.joinRoom(this.config.getRoomId());
   }
 
-  private bindEvents() {
-    this.sendEventBinder.bindNativeEventListener();
+  private setEvents() {
+    this.sendingEvents.registration();
+    this.receivingEvents.listenAllEvents();
     this.message.bindNativeEventHandler();
-    this.receiveEventListener.init();
   }
 
   private mergeWithSavedLocalMyInfo(myInfo: User) {
@@ -78,7 +78,7 @@ class KitchenTable {
   cleanup() {
     this.api?.leave({ roomId: this.config.getRoomId() });
     this.cursor.restoreUserCursor();
-    this.sendEventBinder.unbindNativeEventListener();
+    this.sendingEvents.unregister();
     this.message.unbindNativeEventHandler();
     this.fab.unmount();
     this.cursor.unmount();

@@ -16,8 +16,9 @@ import invariant from 'ts-invariant';
 import ChatStorage from 'storage/ChatStorage';
 import Message from 'ui/Message';
 import { ELEMENT_SELECTOR } from 'utils/constants';
+import { getMyPath, isSamePath, parseUserPath } from 'utils/userPath';
 
-class ReceiveEventListener {
+class ReceivingEvents {
   api!: Api;
   cursor!: Cursor;
   message!: Message;
@@ -36,7 +37,7 @@ class ReceiveEventListener {
     wire(this, 'chatStorage', TYPE.CHAT_STORAGE);
   }
 
-  init() {
+  listenAllEvents() {
     this.listenRoomJoin();
     this.listenRoomLeave();
     this.listenPointMove();
@@ -65,7 +66,7 @@ class ReceiveEventListener {
         if (isMyEvent) {
           return; // not my cursor
         }
-        if (data.element === ELEMENT_SELECTOR.HIDE) {
+        if (this.checkNeedToHide(data)) {
           this.cursor.deleteCursor(data.userId);
           return;
         }
@@ -73,7 +74,7 @@ class ReceiveEventListener {
         this.cursor.moveCursor({ id: data.userId, ...cursorInfo });
       } catch (e) {
         this.cursor.deleteCursor(data.userId);
-        invariant.warn(e);
+        invariant.log(e);
       }
     });
   }
@@ -81,7 +82,7 @@ class ReceiveEventListener {
   listenPointClick() {
     this.api.listen(EventType.POINTER_CLICK, (data: PointerClickOutput) => {
       try {
-        if (data.element === ELEMENT_SELECTOR.HIDE) {
+        if (this.checkNeedToHide(data)) {
           this.cursor.deleteCursor(data.userId);
           return;
         }
@@ -90,7 +91,7 @@ class ReceiveEventListener {
         this.cursor.click({ id: window.crypto.randomUUID(), ...cursorInfo }, isMyEvent);
       } catch (e) {
         this.cursor.deleteCursor(data.userId);
-        invariant.warn(e);
+        invariant.log(e);
       }
     });
   }
@@ -105,6 +106,17 @@ class ReceiveEventListener {
       x: data.x + left + window.scrollX,
       y: data.y + top + window.scrollY,
     };
+  }
+
+  private checkNeedToHide(data: PointerClickOutput | PointerMoveOutput) {
+    if (data.element === ELEMENT_SELECTOR.HIDE) {
+      return true;
+    }
+    const cursorUser = this.usersStorage.get(data.userId);
+    const myPath = parseUserPath(getMyPath());
+    const userPath = parseUserPath(cursorUser.path);
+
+    return !isSamePath(myPath, userPath);
   }
 
   listenChatMessage() {
@@ -141,4 +153,4 @@ class ReceiveEventListener {
   }
 }
 
-export default ReceiveEventListener;
+export default ReceivingEvents;
