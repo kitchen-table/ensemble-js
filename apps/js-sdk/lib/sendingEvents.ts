@@ -8,6 +8,7 @@ import { ELEMENT_SELECTOR } from 'utils/constants';
 import { elementFinder } from 'utils/elementFinder';
 import { throttle } from 'utils/throttle';
 import Config from 'config';
+import { getMyPath } from 'utils/userPath';
 
 type DocumentEventKey = keyof DocumentEventMap;
 type WindowEventKey = keyof WindowEventMap;
@@ -46,7 +47,14 @@ class SendingEvents {
     }
 
     function emitPathChangeEvent() {
-      api.updateMyInfo({ path: window.location.href + window.location.hash });
+      let prevPath = '';
+      return () => {
+        if (prevPath === getMyPath()) {
+          return;
+        }
+        prevPath = getMyPath();
+        api.updateMyInfo({ path: getMyPath() });
+      };
     }
 
     this.documentEvents.set(
@@ -60,7 +68,7 @@ class SendingEvents {
     this.documentEvents.set('click', emitPointerClickEvent);
     this.documentEvents.set('visibilitychange', emitIsBackgroundEvent);
     this.windowEvents.set('popstate', emitPathChangeEvent);
-    this.schedulingEvents.set(emitPathChangeEvent, 500);
+    this.schedulingEvents.set(emitPathChangeEvent(), 500);
   }
 
   registration() {

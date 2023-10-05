@@ -7,6 +7,7 @@ import FABShare from 'ui/FAB/FABShare';
 import FABLeave from 'ui/FAB/FABLeave';
 import EmotionCacheProvider from 'ui/styled/EmotionCacheProvider';
 import { normalizeCss, tooltipCss } from 'ui/styled/css';
+import FABProfile from 'ui/FAB/FABProfile';
 
 class Fab {
   private static containerId = 'kitchen-table-fab-container';
@@ -80,6 +81,7 @@ const FabRoot = () => {
   return (
     <FABFrame>
       <FABUsers />
+      <FABProfile />
       <FABShare />
       <FABChatList />
       <FABLeave />
