@@ -25,9 +25,6 @@ export default defineConfig({
           plugins: [
             terser({
               format: { comments: false },
-              mangle: {
-                properties: true,
-              },
             }),
           ],
         },
