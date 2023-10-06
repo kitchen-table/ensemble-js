@@ -37,13 +37,12 @@ class Cursor {
   }
 
   setUserCursor(color: string) {
+    const prevCursorCss = document.getElementById(Cursor.cursorStyleId);
+    prevCursorCss?.remove();
+
     const blob = new Blob([Cursor.getCursorSVG(color, true)], { type: 'image/svg+xml' });
     const URL = window.URL.createObjectURL(blob);
-    const cssString = `
-      * {
-        cursor: url(${URL}) ${2} ${2}, auto;
-      }
-    `;
+    const cssString = ` * { cursor: url(${URL}) ${2} ${2}, auto; }`;
     const style = document.createElement('style');
     style.id = Cursor.cursorStyleId;
     style.innerHTML = cssString;
