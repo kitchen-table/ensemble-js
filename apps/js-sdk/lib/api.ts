@@ -11,13 +11,14 @@ import {
 import UsersStorage from 'storage/UsersStorage';
 import { TYPE, wire } from 'di';
 import Config from 'config';
+import { signal } from '@preact/signals';
 
 class Api {
   config!: Config;
   usersStorage!: UsersStorage;
 
   private socket!: Socket;
-  private isReady: boolean = false;
+  isReadySignal = signal(false);
 
   constructor() {
     wire(this, 'config', TYPE.CONFIG);
@@ -27,7 +28,7 @@ class Api {
   retryConnect(callback?: () => unknown) {
     let interval: number | undefined;
     const onDisconnect = () => {
-      this.isReady = false;
+      this.isReadySignal.value = false;
       interval = window.setInterval(() => {
         this.socket.connect();
       }, 1000);
@@ -37,7 +38,7 @@ class Api {
 
     this.socket.on('connect', async () => {
       clearInterval(interval);
-      this.isReady = true;
+      this.isReadySignal.value = true;
       callback?.();
     });
   }
@@ -47,12 +48,12 @@ class Api {
     this.socket = io(url, { transports: ['websocket'] });
 
     return new Promise((resolve, reject) => {
-      if (this.isReady) {
+      if (this.isReadySignal.peek()) {
         resolve(this);
         return;
       }
       this.socket.once('connect', () => {
-        this.isReady = true;
+        this.isReadySignal.value = true;
         resolve(this);
       });
       this.socket.once('connect_error', reject);
@@ -60,7 +61,7 @@ class Api {
   }
 
   async login({}: GuestLoginInput): Promise<GuestLoginOutput> {
-    if (!this.isReady) {
+    if (!this.isReadySignal.value) {
       throw new Error('Api is not ready');
     }
     return await this.socket.emitWithAck(EventType.GUEST_LOGIN, {});
@@ -76,7 +77,7 @@ class Api {
   }
 
   async getUserList({ roomId }: RoomUserListInput): Promise<RoomUserListOutput> {
-    if (!this.isReady) {
+    if (!this.isReadySignal.peek()) {
       throw new Error('Api is not ready');
     }
     const output: RoomUserListOutput = await this.socket.emitWithAck(EventType.ROOM_USER_LIST, {
@@ -92,14 +93,14 @@ class Api {
   }
 
   listen(event: string, callback: (...args: any[]) => unknown) {
-    if (!this.isReady) {
+    if (!this.isReadySignal.peek()) {
       throw new Error('Api is not ready');
     }
     this.socket.on(event, callback);
   }
 
   emit(event: string, payload: any) {
-    if (!this.isReady) {
+    if (!this.isReadySignal.peek()) {
       console.error('Api is not ready');
     }
     this.socket.emit(event, payload);

@@ -12,6 +12,7 @@ import UsersStorage from 'storage/UsersStorage';
 import Message from 'ui/Message';
 import Config from 'config';
 import { setVerbosity } from 'ts-invariant';
+import UIStateStorage from 'storage/UIStateStorage';
 
 if (process.env.NODE_ENV !== 'development') {
   setVerbosity('error');
@@ -24,6 +25,7 @@ function containerBind() {
   container.bind<ChatStorage>(TYPE.CHAT_STORAGE).to(ChatStorage).inSingletonScope();
   container.bind<MyInfoStorage>(TYPE.MY_INFO_STORAGE).to(MyInfoStorage).inSingletonScope();
   container.bind<UsersStorage>(TYPE.USERS_STORAGE).to(UsersStorage).inSingletonScope();
+  container.bind<UIStateStorage>(TYPE.UI_STATE_STORAGE).to(UIStateStorage).inSingletonScope();
 
   /**
    * api & events

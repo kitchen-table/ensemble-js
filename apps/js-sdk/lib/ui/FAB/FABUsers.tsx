@@ -14,7 +14,7 @@ export default function FABUsers() {
   const getMyInfoStorage = resolve(TYPE.MY_INFO_STORAGE);
 
   return (
-    <Container id="kitchen-table-fab-users">
+    <>
       {Array.from(users.values()).map((user) => {
         const isMe = getMyInfoStorage().isMyId(user.id);
         const isBackground = user.isBackground;
@@ -25,7 +25,7 @@ export default function FABUsers() {
             aria-label={`${user.name}${suffix}\n${timeAgo(
               new Date(user.createdAt),
             )}\n${getUrlWithoutHost(parseUserPath(user.path))}`}
-            data-microtip-position="left"
+            data-microtip-position="top-left"
             role="tooltip"
             id={`kitchen-table-fab-user-profile-${user.id}`}
             isBackground={isBackground}
@@ -36,20 +36,13 @@ export default function FABUsers() {
           </UserWrapper>
         );
       })}
-    </Container>
+    </>
   );
 }
 
 const ellipsis = (text: string, length: number) => {
   return text.length > length ? text.slice(0, length).trim() + '...' : text;
 };
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-`;
 
 const UserWrapper = styled.div<{ isBackground: boolean }>`
   display: flex;

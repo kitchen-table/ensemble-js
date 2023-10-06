@@ -10,6 +10,7 @@ import UsersStorage from 'storage/UsersStorage';
 import Message from 'ui/Message';
 import Fab from 'ui/FAB';
 import Config from 'config';
+import UIStateStorage from 'storage/UIStateStorage';
 
 const container = new Container();
 const wire = createWire(container);
@@ -27,6 +28,7 @@ const TYPE = {
   CHAT_STORAGE: token<ChatStorage>('ChatStorage'),
   MY_INFO_STORAGE: token<MyInfoStorage>('MyInfoStorage'),
   USERS_STORAGE: token<UsersStorage>('UsersStorage'),
+  UI_STATE_STORAGE: token<UIStateStorage>('UIStateStorage'),
 };
 
 export { container, resolve, wire, TYPE };

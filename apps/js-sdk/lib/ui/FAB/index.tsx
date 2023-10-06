@@ -79,13 +79,17 @@ class Fab {
 
 const FabRoot = () => {
   return (
-    <FABFrame>
-      <FABUsers />
-      <FABProfile />
-      <FABShare />
-      <FABChatList />
-      <FABLeave />
-    </FABFrame>
+    <FABFrame
+      rowChildren={<FABUsers />}
+      columnChildren={
+        <>
+          <FABProfile />
+          <FABShare />
+          <FABChatList />
+          <FABLeave />
+        </>
+      }
+    ></FABFrame>
   );
 };
 
