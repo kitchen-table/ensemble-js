@@ -9,7 +9,7 @@ class UIStateStorage {
     showCursor: true,
   });
   private stateSignal = signal({
-    FABOpenState: false,
+    FABOpenState: true,
   });
 
   constructor() {
