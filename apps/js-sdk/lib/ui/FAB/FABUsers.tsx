@@ -3,9 +3,6 @@ import UsersStorage from 'storage/UsersStorage';
 import { resolve, TYPE } from 'di';
 import styled from 'ui/styled';
 import { User } from '@packages/api';
-import FABToggle from 'ui/FAB/FABToggle';
-import EditMyInfo from 'ui/FAB/EditMyInfo';
-import UserProfile from 'ui/FAB/UserProfile';
 import { getUrlWithoutHost, parseUserPath } from 'utils/userPath';
 import { timeAgo } from 'utils/timeAgo';
 
@@ -19,12 +16,11 @@ export default function FABUsers() {
         const isMe = getMyInfoStorage().isMyId(user.id);
         const isBackground = user.isBackground;
         const suffix = isMe ? ' (You)' : isBackground ? ' (Idle)' : '';
+        const userUrl = user.path ? `\n${getUrlWithoutHost(parseUserPath(user.path))}` : '';
         return (
           <UserWrapper
             key={user.id}
-            aria-label={`${user.name}${suffix}\n${timeAgo(
-              new Date(user.createdAt),
-            )}\n${getUrlWithoutHost(parseUserPath(user.path))}`}
+            aria-label={`${user.name}${suffix}\n${timeAgo(new Date(user.createdAt))}${userUrl}`}
             data-microtip-position="top-left"
             role="tooltip"
             id={`kitchen-table-fab-user-profile-${user.id}`}

@@ -113,6 +113,9 @@ class ReceivingEvents {
       return true;
     }
     const cursorUser = this.usersStorage.get(data.userId);
+    if (!cursorUser.path) {
+      return false;
+    }
     const myPath = parseUserPath(getMyPath());
     const userPath = parseUserPath(cursorUser.path);
 
