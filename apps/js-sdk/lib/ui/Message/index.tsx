@@ -3,9 +3,10 @@ import { effect, Signal, signal } from '@preact/signals';
 import MessageInput from 'ui/Message/MessageInput';
 import invariant from 'ts-invariant';
 import Api from 'api';
-import { TYPE, wire } from 'di';
+import { resolve, TYPE, wire } from 'di';
 import { EventType } from '@packages/api';
 import { throttle } from 'utils/throttle';
+import UIStateStorage from 'storage/UIStateStorage';
 
 type EventKey = keyof WindowEventMap;
 
@@ -21,9 +22,12 @@ class Message {
   mousePositionSignal = signal({ x: 0, y: 0 });
 
   api!: Api;
+  uiStateStorage!: UIStateStorage;
 
   constructor() {
     wire(this, 'api', TYPE.API);
+    wire(this, 'uiStateStorage', TYPE.UI_STATE_STORAGE);
+
     this.mount();
     this.init();
   }
@@ -36,9 +40,7 @@ class Message {
   }
 
   unmount() {
-    const container = document.getElementById(Message.containerId);
-    invariant(container, 'Message container not found');
-    container.remove();
+    this.uiStateStorage.setShowMessage(false);
   }
 
   private init() {
@@ -120,6 +122,10 @@ class Message {
 }
 
 const MessageRoot = () => {
+  const getUIState = resolve(TYPE.UI_STATE_STORAGE);
+  if (!getUIState().getShowMessage()) {
+    return null;
+  }
   return <MessageInput />;
 };
 

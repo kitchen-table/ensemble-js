@@ -9,7 +9,7 @@ import { User } from '@packages/api';
 export default function FABChatList() {
   return (
     <FABToggle
-      aria-label="Chat List"
+      aria-label={`Chat List\nPress '/' key to start typing.`}
       role="tooltip"
       data-microtip-position="left"
       icon={

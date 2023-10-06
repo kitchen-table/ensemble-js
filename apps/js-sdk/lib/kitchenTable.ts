@@ -32,7 +32,10 @@ class KitchenTable {
   }
 
   async init() {
-    console.log('%c 😀 init kitchen-table!', 'background: #222; color: #bada55');
+    console.log(
+      '%c😀 Hi. Welcome to kitchen-table.\nThis is a kitchen table for Everyone who wants to talk with others into the same room. Enjoy!',
+      'display:block; background: black; width:100%; color: #bada55; padding:8px; font-size: 18px; margin: auto;',
+    );
 
     await this.api.init();
     await this.setUsers();
@@ -58,7 +61,7 @@ class KitchenTable {
   }
 
   private mergeWithSavedLocalMyInfo(myInfo: User) {
-    const savedMyInfo = this.myInfoStorage.get();
+    const savedMyInfo = this.myInfoStorage.getSnapshot();
     if (!savedMyInfo) {
       this.myInfoStorage.save(myInfo);
       return myInfo;

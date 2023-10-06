@@ -8,12 +8,18 @@ import FABLeave from 'ui/FAB/FABLeave';
 import EmotionCacheProvider from 'ui/styled/EmotionCacheProvider';
 import { normalizeCss, tooltipCss } from 'ui/styled/css';
 import FABProfile from 'ui/FAB/FABProfile';
+import UIStateStorage from 'storage/UIStateStorage';
+import { resolve, TYPE, wire } from 'di';
 
 class Fab {
   private static containerId = 'kitchen-table-fab-container';
   private static rootId = 'kitchen-table-fab-root';
 
+  uiStateStorage!: UIStateStorage;
+
   constructor() {
+    wire(this, 'uiStateStorage', TYPE.UI_STATE_STORAGE);
+
     this.mount();
     this.addTooltip();
     this.addNormalizer();
@@ -65,9 +71,7 @@ class Fab {
   }
 
   unmount() {
-    const container = document.getElementById(Fab.containerId);
-    invariant(container, 'Fab container not found');
-    container.remove();
+    this.uiStateStorage.setShowFAB(false);
   }
 
   static hasThis(element: HTMLElement) {
@@ -78,6 +82,10 @@ class Fab {
 }
 
 const FabRoot = () => {
+  const getUIState = resolve(TYPE.UI_STATE_STORAGE);
+  if (!getUIState().getShowFAB()) {
+    return null;
+  }
   return (
     <FABFrame
       rowChildren={<FABUsers />}

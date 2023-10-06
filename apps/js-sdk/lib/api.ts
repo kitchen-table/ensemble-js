@@ -18,6 +18,7 @@ class Api {
   usersStorage!: UsersStorage;
 
   private socket!: Socket;
+  private isLeave = false;
   isReadySignal = signal(false);
 
   constructor() {
@@ -28,6 +29,9 @@ class Api {
   retryConnect(callback?: () => unknown) {
     let interval: number | undefined;
     const onDisconnect = () => {
+      if (this.isLeave) {
+        return;
+      }
       this.isReadySignal.value = false;
       interval = window.setInterval(() => {
         this.socket.connect();
@@ -88,6 +92,7 @@ class Api {
   }
 
   leave({ roomId }: RoomLeaveInput) {
+    this.isLeave = true;
     this.emit(EventType.ROOM_LEAVE, { roomId });
     this.socket.close();
   }

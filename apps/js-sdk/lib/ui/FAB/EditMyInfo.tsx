@@ -2,21 +2,26 @@ import { User } from '@packages/api/dist/esm';
 import { resolve, TYPE } from 'di';
 import styled from 'ui/styled';
 import { JSXInternal } from 'preact/src/jsx';
+import { useState } from 'preact/compat';
 
 export default function EditMyInfo() {
   const getMyInfoStorage = resolve(TYPE.MY_INFO_STORAGE);
   const getApi = resolve(TYPE.API);
-  const myInfo = getMyInfoStorage().myInfoSignal.value;
+  const myInfo = getMyInfoStorage().getMyInfo();
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const resetIsSubmitted = () => {
+    setIsSubmitted(false);
+  };
 
   const onSubmit = (event: JSXInternal.TargetedEvent<HTMLFormElement, Event>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const name = formData.get('my-name') as User['name'];
-    const color = formData.get('my-color') as User['color'];
-
+    const [name, color] = Array.from(formData.values());
+    setIsSubmitted(true);
     getApi().updateMyInfo({
-      name,
-      color,
+      name: name as User['name'],
+      color: color as User['color'],
     });
   };
 
@@ -26,9 +31,8 @@ export default function EditMyInfo() {
         <label for="name">Name</label>
         <NameInput
           id="name"
-          name="my-name"
-          autocomplete="off"
-          type="text"
+          name={Math.random().toString(16)} //! PREVENT AUTO COMPLETE
+          onInput={resetIsSubmitted}
           defaultValue={myInfo?.name}
           maxLength={40}
           required
@@ -39,13 +43,13 @@ export default function EditMyInfo() {
         <label for="color">Color</label>
         <ColorInput
           id="color"
-          autocomplete="off"
-          name="my-color"
           type="color"
+          name="color"
+          onInput={resetIsSubmitted}
           defaultValue={myInfo?.color}
         />
       </InputRow>
-      <EditButton>EDIT</EditButton>
+      <EditButton>{isSubmitted ? 'UPDATED!' : 'EDIT'}</EditButton>
     </Form>
   );
 }

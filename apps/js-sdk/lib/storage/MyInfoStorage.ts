@@ -4,17 +4,18 @@ import invariant from 'ts-invariant';
 
 type MyInfo = User;
 
-const KEY = 'kitchen-table-my-info';
 class MyInfoStorage {
-  myInfoSignal: Signal<MyInfo | null> = signal(null);
+  private key: string = 'kitchen-table-my-info';
+  private storage: Storage = localStorage;
+  private myInfoSignal: Signal<MyInfo | null> = signal(null);
 
   constructor() {
-    const savedInfo = sessionStorage.getItem(KEY);
+    const savedInfo = this.storage.getItem(this.key);
     if (savedInfo) {
       this.myInfoSignal.value = JSON.parse(savedInfo);
     }
     effect(() => {
-      sessionStorage.setItem(KEY, JSON.stringify(this.myInfoSignal.value));
+      this.storage.setItem(this.key, JSON.stringify(this.myInfoSignal.value));
     });
   }
 
@@ -22,12 +23,16 @@ class MyInfoStorage {
     this.myInfoSignal.value = myInfo;
   }
 
-  get(): MyInfo | null {
+  getMyInfo(): MyInfo | null {
+    return this.myInfoSignal.value;
+  }
+
+  getSnapshot(): MyInfo | null {
     return this.myInfoSignal.peek();
   }
 
   isMyId(userId: string) {
-    const myInfo = this.get();
+    const myInfo = this.getSnapshot();
     invariant(myInfo, 'myInfo is null');
     return myInfo.id === userId;
   }

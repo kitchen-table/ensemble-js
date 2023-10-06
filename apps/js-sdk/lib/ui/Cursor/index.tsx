@@ -4,7 +4,8 @@ import Cursors from 'ui/Cursor/Cursors';
 import CursorClicks from 'ui/Cursor/CursorClicks';
 import invariant from 'ts-invariant';
 import Config from 'config';
-import { TYPE, wire } from 'di';
+import { resolve, TYPE, wire } from 'di';
+import UIStateStorage from 'storage/UIStateStorage';
 
 export type CursorData = {
   id: string;
@@ -21,6 +22,7 @@ class Cursor {
   static cursorClickSignals: Signal<CursorData[]> = signal([]);
 
   config!: Config;
+  uiStateStorage!: UIStateStorage;
 
   static getCursorSVG(color: string, isMyCursor?: boolean) {
     return `
@@ -32,6 +34,7 @@ class Cursor {
 
   constructor() {
     wire(this, 'config', TYPE.CONFIG);
+    wire(this, 'uiStateStorage', TYPE.UI_STATE_STORAGE);
 
     this.mount();
   }
@@ -61,9 +64,7 @@ class Cursor {
   }
 
   unmount() {
-    const container = document.getElementById(Cursor.containerId);
-    invariant(container, 'Cursor container not found');
-    container.remove();
+    this.uiStateStorage.setShowCursor(false);
   }
 
   deleteCursor(id: string) {
@@ -127,6 +128,10 @@ class Cursor {
 }
 
 const CursorRoot = () => {
+  const getUIState = resolve(TYPE.UI_STATE_STORAGE);
+  if (!getUIState().getShowCursor()) {
+    return null;
+  }
   return (
     <>
       <Cursors />
