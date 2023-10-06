@@ -64,9 +64,9 @@ const Summary = styled.summary`
 const ContentWrapper = styled.div`
   position: absolute;
   z-index: -1;
-  right: 56px;
+  right: 50px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
   background-color: white;
   bottom: 0;
   padding: 8px;

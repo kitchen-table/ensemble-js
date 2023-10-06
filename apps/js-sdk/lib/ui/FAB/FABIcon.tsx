@@ -18,12 +18,16 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  margin: auto;
 
   border: 2px solid #3d3939;
   width: 32px;
-  height: 30px;
+  height: 32px;
   border-radius: 8px;
+
+  // prevent text selection
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 
   transition: transform 0.2s ease-in-out;
   &:hover {
