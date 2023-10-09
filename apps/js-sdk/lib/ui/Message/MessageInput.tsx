@@ -1,19 +1,17 @@
 import Message from 'ui/Message/index';
 import { ChangeEvent, useEffect, useRef } from 'preact/compat';
-import { useSignal } from '@preact/signals';
+import { signal, useSignal } from '@preact/signals';
 
 const INITIAL_OPACITY = 8;
+const showPrevMessageSignal = signal(false);
 
 export default function MessageInput() {
   const opacitySignal = useSignal(INITIAL_OPACITY);
-  const showPrevMessageSignal = useSignal(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const closeInput = () => {
     Message.isVisibleSignal.value = false;
-    Message.messageSignal.value = '';
-    showPrevMessageSignal.value = false;
   };
 
   const resetOpacity = () => {
@@ -38,7 +36,7 @@ export default function MessageInput() {
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (Message.isVisibleSignal.value) {
+    if (Message.isVisibleSignal.value || showPrevMessageSignal.value) {
       resetOpacity();
       inputRef.current?.focus({
         preventScroll: true,
@@ -51,26 +49,23 @@ export default function MessageInput() {
     }
 
     return () => clearInterval(interval);
-  }, [Message.isVisibleSignal.value]);
+  }, [Message.isVisibleSignal.value, showPrevMessageSignal.value]);
 
   useEffect(() => {
     if (opacitySignal.value <= 0) {
       Message.messageSignal.value = '';
+      showPrevMessageSignal.value = false;
       closeInput();
       resetOpacity();
     }
   }, [opacitySignal.value]);
-
-  if (!Message.isVisibleSignal.value) {
-    return <div id={Message.inputContainerId} />;
-  }
 
   return (
     <div
       id={Message.inputContainerId}
       ref={containerRef}
       style={{
-        display: 'flex',
+        display: showPrevMessageSignal.value || Message.isVisibleSignal.value ? 'flex' : 'none',
         flexDirection: 'column',
         alignItems: 'flex-start',
         position: 'absolute',
@@ -85,53 +80,61 @@ export default function MessageInput() {
         border: '1px solid #ccc',
       }}
     >
-      <form
-        tabIndex={-1}
-        onSubmit={(e) => {
-          e.preventDefault();
-          const form = e.currentTarget;
-          const formData = new FormData(form);
-          Message.messageSignal.value = String(formData.get('message'));
-          showPrevMessageSignal.value = true;
-          resetInputWidth();
-          form.reset();
-        }}
-      >
-        <input
+      {Message.isVisibleSignal.value && (
+        <form
           tabIndex={-1}
-          ref={inputRef}
-          onChange={onInputChange}
-          onBlur={closeInput}
-          style={{
-            padding: 0,
-            outline: 'none',
-            border: 'none',
-            overflow: 'hidden',
-            resize: 'none',
-            wordBreak: 'break-all',
-            fontSize: '14px',
+          onSubmit={(e) => {
+            e.preventDefault();
+            const form = e.currentTarget;
+            const formData = new FormData(form);
+            Message.messageSignal.value = String(formData.get('message'));
+            showPrevMessageSignal.value = true;
+            resetInputWidth();
+            form.reset();
           }}
-          maxLength={50}
-          name="message"
-          placeholder="Message..."
-          autocomplete="off"
-          type="text"
-          required
-        />
-      </form>
-      <div
-        tabIndex={-1}
-        style={{
-          fontSize: '14px',
-          overflow: 'visible',
-          wordBreak: 'break-all',
-          transition: 'all 0.5s ease-in-out',
-          opacity: showPrevMessageSignal.value ? 1 : 0,
-          maxHeight: showPrevMessageSignal.value ? '300px' : 0,
-        }}
-      >
-        {Message.messageSignal.value}
-      </div>
+        >
+          <input
+            tabIndex={-1}
+            ref={inputRef}
+            onChange={onInputChange}
+            onBlur={closeInput}
+            style={{
+              padding: 0,
+              outline: 'none',
+              border: 'none',
+              overflow: 'hidden',
+              resize: 'none',
+              wordBreak: 'break-all',
+              fontSize: '14px',
+            }}
+            maxLength={50}
+            name="message"
+            placeholder="Message..."
+            autocomplete="off"
+            type="text"
+            required
+          />
+        </form>
+      )}
+      <PrevMessageBox />
+    </div>
+  );
+}
+
+function PrevMessageBox() {
+  return (
+    <div
+      tabIndex={-1}
+      style={{
+        fontSize: '14px',
+        overflow: 'visible',
+        wordBreak: 'break-all',
+        transition: 'all 0.5s ease-in-out',
+        opacity: showPrevMessageSignal.value ? 1 : 0,
+        maxHeight: showPrevMessageSignal.value ? '300px' : 0,
+      }}
+    >
+      {Message.messageSignal.value}
     </div>
   );
 }
