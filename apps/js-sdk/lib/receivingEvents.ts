@@ -102,6 +102,7 @@ class ReceivingEvents {
     invariant(element, `element not found. selector: ${data.element}`);
     const { top, left } = element.getBoundingClientRect();
     return {
+      name: cursorUser.name,
       color: cursorUser.color,
       x: data.x + left + window.scrollX,
       y: data.y + top + window.scrollY,

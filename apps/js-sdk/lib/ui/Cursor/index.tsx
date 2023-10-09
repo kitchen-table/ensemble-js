@@ -9,6 +9,7 @@ import UIStateStorage from 'storage/UIStateStorage';
 
 export type CursorData = {
   id: string;
+  name: string;
   color: string;
   x: number;
   y: number;

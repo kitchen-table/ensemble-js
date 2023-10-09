@@ -1,5 +1,6 @@
 import Cursor from 'ui/Cursor/index';
 import MessageBox from 'ui/Message/MessageBox';
+import { css } from '@emotion/css';
 
 export default function Cursors() {
   return (
@@ -16,6 +17,18 @@ export default function Cursors() {
               pointerEvents: 'none',
               zIndex: 9999,
             }}
+            class={css`
+              ::after {
+                content: '${cursor.name}';
+                position: absolute;
+                pointer-events: none;
+                font-size: 12px;
+                line-height: 1.3;
+                color: ${cursor.color};
+                white-space: pre-wrap;
+                word-break: keep-all;
+              }
+            `}
           >
             <div
               style={{
