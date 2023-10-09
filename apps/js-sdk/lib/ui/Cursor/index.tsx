@@ -24,7 +24,7 @@ class Cursor {
   config!: Config;
   uiStateStorage!: UIStateStorage;
 
-  static getCursorSVG(color: string, isMyCursor?: boolean) {
+  static getCursorSVG(color: string) {
     return `
     <svg xmlns="http://www.w3.org/2000/svg" width="${this.size}" height="${this.size}" viewBox="0 0 28 28" fill="${color}" style="filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));">
         <polygon fill="white" points="8.2,20.9 8.2,4.9 19.8,16.5 13,16.5 12.6,16.6 "/>
@@ -42,11 +42,17 @@ class Cursor {
     this.mount();
   }
 
+  /**
+   * @experimental
+   */
   setUserCursor(color: string) {
+    if (!this.config.getIsActivateExperimental()) {
+      return;
+    }
     const prevCursorCss = document.getElementById(Cursor.cursorStyleId);
     prevCursorCss?.remove();
 
-    const blob = new Blob([Cursor.getCursorSVG(color, true)], { type: 'image/svg+xml' });
+    const blob = new Blob([Cursor.getCursorSVG(color)], { type: 'image/svg+xml' });
     const URL = window.URL.createObjectURL(blob);
     const cssString = ` * { cursor: url(${URL}) ${2} ${2}, auto; }`;
     const style = document.createElement('style');
@@ -55,8 +61,15 @@ class Cursor {
     document.head.appendChild(style);
   }
 
+  /**
+   * @experimental
+   */
   restoreUserCursor() {
-    document.head.removeChild(document.getElementById(Cursor.cursorStyleId)!);
+    if (!this.config.getIsActivateExperimental()) {
+      return;
+    }
+    const cursorCss = document.getElementById(Cursor.cursorStyleId);
+    cursorCss?.remove();
   }
 
   private mount() {
