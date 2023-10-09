@@ -11,8 +11,8 @@ export default function Cursors() {
             id={`kitchen-table-cursor-${cursor.id}`}
             style={{
               position: 'absolute',
-              top: cursor.y - 2,
-              left: cursor.x - 2,
+              top: cursor.y - 7,
+              left: cursor.x - 9,
               pointerEvents: 'none',
               zIndex: 9999,
             }}

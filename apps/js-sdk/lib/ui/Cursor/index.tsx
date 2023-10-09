@@ -17,7 +17,7 @@ export type CursorData = {
 class Cursor {
   private static cursorStyleId = 'kitchen-table-cursor-style';
   private static containerId = 'kitchen-table-cursors-container';
-  static size = 24;
+  static size = 28;
   static cursorSignals: Signal<CursorData[]> = signal([]);
   static cursorClickSignals: Signal<CursorData[]> = signal([]);
 
@@ -26,10 +26,13 @@ class Cursor {
 
   static getCursorSVG(color: string, isMyCursor?: boolean) {
     return `
-    <svg fill="#E2E2E2" width="${this.size}px" height="${this.size}px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M3.1,4.46l7.21,15.92A1.17,1.17,0,0,0,12.5,20l1.26-6.23L20,12.5a1.17,1.17,0,0,0,.39-2.19L4.46,3.1A1,1,0,0,0,3.1,4.46Z" style="fill: ${color}; stroke-width: 2;"></path>
-      <path d="M3.1,4.46l7.21,15.92A1.17,1.17,0,0,0,12.5,20l1.26-6.23L20,12.5a1.17,1.17,0,0,0,.39-2.19L4.46,3.1A1,1,0,0,0,3.1,4.46Z" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path>
-    </svg>`;
+    <svg xmlns="http://www.w3.org/2000/svg" width="${this.size}" height="${this.size}" viewBox="0 0 28 28" fill="${color}" style="filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));">
+        <polygon fill="white" points="8.2,20.9 8.2,4.9 19.8,16.5 13,16.5 12.6,16.6 "/>
+        <polygon fill="white" points="17.3,21.6 13.7,23.1 9,12 12.7,10.5 "/>
+        <rect x="12.5" y="13.6" transform="matrix(0.9221 -0.3871 0.3871 0.9221 -5.7605 6.5909)" width="2" height="8"/>
+        <polygon points="9.2,7.3 9.2,18.5 12.2,15.6 12.6,15.5 17.4,15.5 "/>
+    </svg>
+    `;
   }
 
   constructor() {
