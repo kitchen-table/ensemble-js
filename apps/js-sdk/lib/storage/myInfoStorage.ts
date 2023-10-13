@@ -1,21 +1,19 @@
 import { effect, Signal, signal } from '@preact/signals';
 import { User } from '@packages/api';
 import invariant from 'ts-invariant';
+import { BaseStorage } from 'storage/base';
 
 type MyInfo = User;
 
-class MyInfoStorage {
-  private key: string = 'kitchen-table-my-info';
-  private storage: Storage = localStorage;
+class MyInfoStorage extends BaseStorage<MyInfo | null> {
   private myInfoSignal: Signal<MyInfo | null> = signal(null);
 
   constructor() {
-    const savedInfo = this.storage.getItem(this.key);
-    if (savedInfo) {
-      this.myInfoSignal.value = JSON.parse(savedInfo);
-    }
+    super('kitchen-table-my-info', localStorage);
+
+    this.myInfoSignal.value = this.restoreData(null);
     effect(() => {
-      this.storage.setItem(this.key, JSON.stringify(this.myInfoSignal.value));
+      this.setItem(this.myInfoSignal.value);
     });
   }
 

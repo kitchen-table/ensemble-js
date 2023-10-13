@@ -1,18 +1,18 @@
 import { container, TYPE } from 'di';
 
 import KitchenTable from 'kitchenTable';
-import ChatStorage from 'storage/ChatStorage';
-import MyInfoStorage from 'storage/MyInfoStorage';
+import ChatStorage from 'storage/chatStorage';
+import MyInfoStorage from 'storage/myInfoStorage';
 import Api from 'api';
 import SendingEvents from 'sendingEvents';
 import ReceivingEvents from 'receivingEvents';
 import Cursor from 'ui/Cursor';
 import Fab from 'ui/FAB';
-import UsersStorage from 'storage/UsersStorage';
+import UsersStorage from 'storage/usersStorage';
 import Message from 'ui/Message';
 import Config from 'config';
 import { setVerbosity } from 'ts-invariant';
-import UIStateStorage from 'storage/UIStateStorage';
+import UIStateStorage from 'storage/uiStateStorage';
 
 if (process.env.NODE_ENV !== 'development') {
   setVerbosity('error');

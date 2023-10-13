@@ -5,7 +5,7 @@ import CursorClicks from 'ui/Cursor/CursorClicks';
 import invariant from 'ts-invariant';
 import Config from 'config';
 import { resolve, TYPE, wire } from 'di';
-import UIStateStorage from 'storage/UIStateStorage';
+import UIStateStorage from 'storage/uiStateStorage';
 
 export type CursorData = {
   id: string;

@@ -6,7 +6,7 @@ import Api from 'api';
 import { resolve, TYPE, wire } from 'di';
 import { EventType } from '@packages/api';
 import { throttle } from 'utils/throttle';
-import UIStateStorage from 'storage/UIStateStorage';
+import UIStateStorage from 'storage/uiStateStorage';
 
 type EventKey = keyof WindowEventMap;
 

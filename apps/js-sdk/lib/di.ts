@@ -3,14 +3,14 @@ import KitchenTable from 'kitchenTable';
 import Api from 'api';
 import SendingEvents from 'sendingEvents';
 import ReceivingEvents from 'receivingEvents';
-import ChatStorage from 'storage/ChatStorage';
-import MyInfoStorage from 'storage/MyInfoStorage';
+import ChatStorage from 'storage/chatStorage';
+import MyInfoStorage from 'storage/myInfoStorage';
 import Cursor from 'ui/Cursor';
-import UsersStorage from 'storage/UsersStorage';
+import UsersStorage from 'storage/usersStorage';
 import Message from 'ui/Message';
 import Fab from 'ui/FAB';
 import Config from 'config';
-import UIStateStorage from 'storage/UIStateStorage';
+import UIStateStorage from 'storage/uiStateStorage';
 
 const container = new Container();
 const wire = createWire(container);

@@ -8,7 +8,7 @@ import {
   RoomUserListOutput,
   UpdateMyInfoInput,
 } from '@packages/api';
-import UsersStorage from 'storage/UsersStorage';
+import UsersStorage from 'storage/usersStorage';
 import { TYPE, wire } from 'di';
 import Config from 'config';
 import { signal } from '@preact/signals';

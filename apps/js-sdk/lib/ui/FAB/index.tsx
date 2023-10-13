@@ -8,7 +8,7 @@ import FABLeave from 'ui/FAB/FABLeave';
 import EmotionCacheProvider from 'ui/styled/EmotionCacheProvider';
 import { normalizeCss, tooltipCss } from 'ui/styled/css';
 import FABProfile from 'ui/FAB/FABProfile';
-import UIStateStorage from 'storage/UIStateStorage';
+import UIStateStorage from 'storage/uiStateStorage';
 import { resolve, TYPE, wire } from 'di';
 
 class Fab {

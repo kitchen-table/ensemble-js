@@ -9,11 +9,11 @@ import {
   UpdateMyInfoOutput,
 } from '@packages/api';
 import { TYPE, wire } from 'di';
-import UsersStorage from 'storage/UsersStorage';
-import MyInfoStorage from 'storage/MyInfoStorage';
+import UsersStorage from 'storage/usersStorage';
+import MyInfoStorage from 'storage/myInfoStorage';
 import Cursor from 'ui/Cursor';
 import invariant from 'ts-invariant';
-import ChatStorage from 'storage/ChatStorage';
+import ChatStorage from 'storage/chatStorage';
 import Message from 'ui/Message';
 import { ELEMENT_SELECTOR } from 'utils/constants';
 import { getMyPath, isSamePath, parseUserPath } from 'utils/userPath';

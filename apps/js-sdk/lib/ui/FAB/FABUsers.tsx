@@ -1,5 +1,5 @@
 import { getContrastColor } from 'utils/color';
-import UsersStorage from 'storage/UsersStorage';
+import UsersStorage from 'storage/usersStorage';
 import { resolve, TYPE } from 'di';
 import styled from 'ui/styled';
 import { User } from '@packages/api';

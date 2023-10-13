@@ -1,5 +1,6 @@
 import { effect, signal } from '@preact/signals';
 import { User } from '@packages/api';
+import { BaseStorage } from 'storage/base';
 
 type Chat = {
   userId: User['id'];
@@ -9,18 +10,15 @@ type Chat = {
   timestamp: number;
 };
 
-const KEY = 'kitchen-table-message-list';
-
-class ChatStorage {
+class ChatStorage extends BaseStorage<Chat[]> {
   messages = signal<Chat[]>([]);
 
   constructor() {
-    const savedMessages = sessionStorage.getItem(KEY);
-    if (savedMessages) {
-      this.messages.value = JSON.parse(savedMessages);
-    }
+    super('kitchen-table-message-list', sessionStorage);
+    this.messages.value = this.restoreData([]);
+
     effect(() => {
-      sessionStorage.setItem(KEY, JSON.stringify(this.messages.value));
+      this.setItem(this.messages.value);
     });
   }
 

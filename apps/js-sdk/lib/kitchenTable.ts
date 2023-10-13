@@ -5,7 +5,7 @@ import Cursor from 'ui/Cursor';
 import Message from 'ui/Message';
 import { TYPE, wire } from 'di';
 import Fab from 'ui/FAB';
-import MyInfoStorage from 'storage/MyInfoStorage';
+import MyInfoStorage from 'storage/myInfoStorage';
 import { User } from '@packages/api';
 import invariant from 'ts-invariant';
 import Config from 'config';
