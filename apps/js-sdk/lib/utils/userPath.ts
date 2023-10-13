@@ -1,5 +1,3 @@
-import invariant from 'ts-invariant';
-
 export function getMyPath(): string {
   return window.location.href;
 }
