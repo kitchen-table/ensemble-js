@@ -1,11 +1,29 @@
 import Cursor from 'ui/Cursor/index';
 import MessageBox from 'ui/Message/MessageBox';
 import { css } from '@emotion/css';
+import { resolve, TYPE } from 'di';
 
 export default function Cursors() {
+  const getConfig = resolve(TYPE.CONFIG);
+
   return (
     <>
       {Cursor.cursorSignals.value.map((cursor) => {
+        const cursorNameStyle = css`
+          ::after {
+            content: '${cursor.name}';
+            position: absolute;
+            pointer-events: none;
+            transform: translate(90%, -20px);
+            max-width: 30px;
+            font-size: 12px;
+            text-shadow: 1px 1px 2px #eae1e1;
+            line-height: 1.3;
+            color: ${cursor.color};
+            white-space: pre-wrap;
+            word-break: keep-all;
+          }
+        `;
         return (
           <div
             key={cursor.id}
@@ -17,18 +35,7 @@ export default function Cursors() {
               pointerEvents: 'none',
               zIndex: 9999,
             }}
-            class={css`
-              ::after {
-                content: '${cursor.name}';
-                position: absolute;
-                pointer-events: none;
-                font-size: 12px;
-                line-height: 1.3;
-                color: ${cursor.color};
-                white-space: pre-wrap;
-                word-break: keep-all;
-              }
-            `}
+            class={getConfig().getIsShowCursorName() ? cursorNameStyle : undefined}
           >
             <div
               style={{

@@ -30,6 +30,10 @@ class Config {
     const defaultRoomId = window.location.origin + window.location.pathname;
     return roomId ?? defaultRoomId;
   }
+
+  getIsShowCursorName() {
+    return false;
+  }
 }
 
 export default Config;
