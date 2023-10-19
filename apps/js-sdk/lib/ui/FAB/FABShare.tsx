@@ -4,10 +4,10 @@ import styled from 'ui/styled';
 
 export default function FABShare() {
   const share = () => {
-    // const url = window.location.href;
-    // const title = document.title;
-    // const text = 'Check out this awesome website!';
-    // navigator.share({ url, title, text });
+    const url = window.location.href;
+    const title = document.title;
+    const text = 'Check out this awesome website!';
+    navigator.share?.({ url, title, text });
   };
 
   return (
