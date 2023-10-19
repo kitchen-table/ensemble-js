@@ -97,7 +97,7 @@ const FabRoot = () => {
           <FABLeave />
         </>
       }
-    ></FABFrame>
+    />
   );
 };
 
