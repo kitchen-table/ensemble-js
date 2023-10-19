@@ -19,8 +19,8 @@
   "dependencies": {
     "@emotion/cache": "11.11.0",
     "@emotion/css": "11.11.2",
-    "@emotion/styled": "11.11.0",
     "@emotion/react": "11.11.1",
+    "@emotion/styled": "11.11.0",
     "@medv/finder": "3.1.0",
     "@owja/ioc": "2.0.0-alpha.7",
     "@packages/api": "workspace:*",
@@ -30,12 +30,13 @@
     "css-selector-generator": "3.6.4",
     "javascript-time-ago": "2.5.9",
     "preact": "10.17.1",
+    "react-icons": "^4.11.0",
     "socket.io-client": "4.7.2",
     "ts-invariant": "0.10.3"
   },
   "devDependencies": {
+    "@rollup/plugin-terser": "0.4.4",
     "vite": "^4.4.9",
-    "vite-tsconfig-paths": "^4.2.1",
-    "@rollup/plugin-terser": "0.4.4"
+    "vite-tsconfig-paths": "^4.2.1"
   }
 }
