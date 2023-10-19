@@ -5,7 +5,8 @@ import FABToggle from 'ui/FAB/FABToggle';
 import styled from 'ui/styled';
 import { getContrastColor } from 'utils/color';
 import { User } from '@packages/api';
-import { BiChat } from 'react-icons/bi';
+import { BiChat, BiConversation } from 'react-icons/bi';
+import { timeAgo } from 'utils/timeAgo';
 
 export default function FABChatList() {
   return (
@@ -44,8 +45,11 @@ const ChatListBox = () => {
     }
   }, [chatStorage().messages.value.length]);
 
+  const isEmpty = chatStorage().messages.value.length === 0;
+
   return (
     <ChatListBoxContainer>
+      {isEmpty && <ChatsPlaceholder />}
       <ChatList ref={chatListRef}>
         {chatStorage().messages.value.map((message) => {
           return (
@@ -54,6 +58,9 @@ const ChatListBox = () => {
                 {message.userName[0].toUpperCase()}
               </ChatUserIcon>
               <ChatMessage>{message.message}</ChatMessage>
+              <ChatSendAt aria-label={new Date(message.timestamp).toLocaleString()}>
+                {timeAgo(new Date(message.timestamp))}
+              </ChatSendAt>
             </ChatMessageContainer>
           );
         })}
@@ -104,7 +111,32 @@ const ChatUserIcon = styled.div<{ bgColor: User['color'] }>`
 
 const ChatMessage = styled.span`
   padding: 4px 8px;
-  border: 1px solid #3d3939;
+  border: 1px solid #cbcbcb;
   border-radius: 4px;
   font-size: 13px;
 `;
+
+const ChatSendAt = styled.span`
+  padding: 4px 4px 0;
+  align-self: flex-end;
+  font-size: 10px;
+  color: #868686;
+`;
+
+const ChatsPlaceholder = () => {
+  return (
+    <div
+      style={{
+        marginTop: '60px',
+        display: 'flex',
+        gap: '16px',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <BiConversation size={32} color={'rgba(0,0,0,0.8)'} />
+      <p>Don't be shy, say hi!</p>
+    </div>
+  );
+};
