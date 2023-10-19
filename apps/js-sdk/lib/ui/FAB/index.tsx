@@ -92,7 +92,7 @@ const FabRoot = () => {
       columnChildren={
         <>
           <FABProfile />
-          <FABShare />
+          {/*<FABShare />*/}
           <FABChatList />
           <FABLeave />
         </>
