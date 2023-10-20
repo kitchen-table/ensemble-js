@@ -3,7 +3,8 @@ import { ChangeEvent, useEffect, useRef } from 'preact/compat';
 import { signal, useSignal } from '@preact/signals';
 
 const INITIAL_OPACITY = 8;
-const showPrevMessageSignal = signal(false);
+const prevMessageSignal = signal<string | null>(null);
+const showPrevMessageSignal = signal<boolean>(false);
 
 export default function MessageInput() {
   const opacitySignal = useSignal(INITIAL_OPACITY);
@@ -26,6 +27,7 @@ export default function MessageInput() {
     resetOpacity();
     resetInputWidth();
     e.currentTarget.style.width = `${e.currentTarget.scrollWidth}px`;
+    Message.messageSignal.value = e.currentTarget.value;
 
     if (showPrevMessageSignal.value) {
       setTimeout(() => {
@@ -75,7 +77,7 @@ export default function MessageInput() {
         transition: 'opacity 0.2s ease-in-out',
         opacity: opacitySignal.value,
         borderRadius: '8px',
-        padding: '8px',
+        padding: '6px 8px',
         lineHeight: '1.5',
         border: '1px solid #ccc',
       }}
@@ -87,7 +89,7 @@ export default function MessageInput() {
             e.preventDefault();
             const form = e.currentTarget;
             const formData = new FormData(form);
-            Message.messageSignal.value = String(formData.get('message'));
+            prevMessageSignal.value = String(formData.get('message'));
             showPrevMessageSignal.value = true;
             resetInputWidth();
             form.reset();
@@ -134,7 +136,7 @@ function PrevMessageBox() {
         maxHeight: showPrevMessageSignal.value ? '300px' : 0,
       }}
     >
-      {Message.messageSignal.value}
+      {prevMessageSignal.value}
     </div>
   );
 }

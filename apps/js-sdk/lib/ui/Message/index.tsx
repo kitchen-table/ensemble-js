@@ -7,6 +7,7 @@ import { resolve, TYPE, wire } from 'di';
 import { EventType } from '@packages/api';
 import { throttle } from 'utils/throttle';
 import UIStateStorage from 'storage/uiStateStorage';
+import { debounce } from 'utils/debounce';
 
 type EventKey = keyof WindowEventMap;
 
@@ -87,11 +88,11 @@ class Message {
   }
 
   private addMessageSubmitEffect() {
+    const debouncedEmitMessage = debounce((message: string) => {
+      this.api.emit(EventType.CHAT_MESSAGE, { message });
+    }, 100);
     effect(() => {
-      if (Message.messageSignal.value === '') {
-        return;
-      }
-      this.api.emit(EventType.CHAT_MESSAGE, { message: Message.messageSignal.value });
+      debouncedEmitMessage(Message.messageSignal.value);
     });
   }
 

@@ -37,14 +37,14 @@ export default function MessageBox({ id, color }: { id: string; color: string })
         display: 'inline-block',
         position: 'relative',
         left: '20px',
-        backgroundColor: opacitySignal.value === INITIAL_OPACITY ? color : 'white',
+        backgroundColor: 'white',
         transform: opacitySignal.value === INITIAL_OPACITY ? 'scale(1.05)' : 'scale(1)',
         transition: 'all 0.5s ease-in-out',
         opacity: opacitySignal.value,
         fontSize: '14px',
         border: '1px solid #ccc',
         borderRadius: '8px',
-        padding: '8px',
+        padding: '6px 8px',
         lineHeight: '1.5',
       }}
     >
