@@ -26,6 +26,7 @@ export default function MessageInput() {
     resetOpacity();
     resetInputWidth();
     e.currentTarget.style.width = `${e.currentTarget.scrollWidth}px`;
+    Message.messageSignal.value = e.currentTarget.value;
 
     if (showPrevMessageSignal.value) {
       setTimeout(() => {
