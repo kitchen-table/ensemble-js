@@ -13,6 +13,7 @@
     "strictNullChecks": true,
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
+    "noImplicitReturns": true,
     "types": ["type.d.ts"],
     "paths": {
       "react": ["./node_modules/preact/compat/"],
