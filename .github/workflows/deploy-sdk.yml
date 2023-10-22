@@ -34,7 +34,12 @@ jobs:
       - name: Build SDK
         run: pnpm build
 
-      - uses: actions/upload-artifact@v3
-        with:
-          name: sdk
-          path: apps/js-sdk/dist/@kitchen-table/js-sdk.es.js
+      - name: Upload Artifacts to AWS S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 cp \
+            --recursive \
+            --region ap-northeast-2 \
+            apps/js-sdk/dist/@kitchen-table s3://ensemblejs
