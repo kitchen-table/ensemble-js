@@ -1,0 +1,10 @@
+feature:
+  head: "feature/*"
+fix:
+  head: "fix/*"
+enhancement:
+  head: "enhance/*"
+documents:
+  head: ["documents/*", "docs/*"]
+refactoring:
+  head: ["refactoring/*", "refactor/*"]
