@@ -112,8 +112,18 @@ class Cursor {
     }
   }
 
+  scheduleDeleteCursorClick(id: string) {
+    const CURSOR_CLICK_DELETE_TIMEOUT = 1000;
+
+    setTimeout(() => {
+      this.deleteCursorClick(id);
+    }, CURSOR_CLICK_DELETE_TIMEOUT);
+  }
+
   click(data: CursorData, isMyCursor: boolean) {
     Cursor.cursorClickSignals.value = Cursor.cursorClickSignals.value.concat(data);
+    this.scheduleDeleteCursorClick(data.id);
+
     if (isMyCursor) {
       return;
     }
