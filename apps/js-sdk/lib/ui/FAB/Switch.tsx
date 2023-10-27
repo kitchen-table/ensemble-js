@@ -4,10 +4,9 @@ import styled from 'ui/styled';
 type SwitchProps = {
   checked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
-  children?: ComponentChildren;
 };
 
-export default function Switch({ children, checked, onCheckedChange }: SwitchProps) {
+export default function Switch({ checked, onCheckedChange }: SwitchProps) {
   return (
     <label>
       <SwitchWrapper>
@@ -20,7 +19,6 @@ export default function Switch({ children, checked, onCheckedChange }: SwitchPro
         />
         <span class="slide" />
       </SwitchWrapper>
-      {children}
     </label>
   );
 }
