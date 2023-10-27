@@ -48,7 +48,7 @@ class Api {
   }
 
   async init(): Promise<Api> {
-    const url = this.config.getServerUrl();
+    const url = this.config.serverUrl;
     this.socket = io(url, { transports: ['websocket'] });
 
     return new Promise((resolve, reject) => {

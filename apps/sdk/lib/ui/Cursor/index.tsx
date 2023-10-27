@@ -47,7 +47,7 @@ class Cursor {
    * @experimental
    */
   setUserCursor(color: string) {
-    if (!this.config.getIsActivateExperimental()) {
+    if (!this.config.isActivateExperimental) {
       return;
     }
     const prevCursorCss = document.getElementById(Cursor.cursorStyleId);
@@ -66,7 +66,7 @@ class Cursor {
    * @experimental
    */
   restoreUserCursor() {
-    if (!this.config.getIsActivateExperimental()) {
+    if (!this.config.isActivateExperimental) {
       return;
     }
     const cursorCss = document.getElementById(Cursor.cursorStyleId);
@@ -131,7 +131,7 @@ class Cursor {
      * @experimental
      * This is a hack to make the click event work on the remote cursor.
      */
-    if (this.config.getIsActivateExperimental()) {
+    if (this.config.isActivateExperimental) {
       const element = document.elementFromPoint(data.x, data.y);
       if (element) {
         const customEvent = new PointerEvent('click', {

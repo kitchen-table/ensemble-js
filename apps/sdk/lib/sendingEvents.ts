@@ -57,13 +57,10 @@ class SendingEvents {
       };
     }
 
-    this.documentEvents.set(
-      'mousemove',
-      throttle(emitMoveEvent, this.config.getMoveEventThrottleMs()),
-    );
+    this.documentEvents.set('mousemove', throttle(emitMoveEvent, this.config.moveEventThrottleMs));
     this.documentEvents.set(
       'pointermove',
-      throttle(emitMoveEvent, this.config.getMoveEventThrottleMs()),
+      throttle(emitMoveEvent, this.config.moveEventThrottleMs),
     );
     this.documentEvents.set('click', emitPointerClickEvent);
     this.documentEvents.set('visibilitychange', emitIsBackgroundEvent);
