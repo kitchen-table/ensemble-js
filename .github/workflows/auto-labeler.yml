@@ -1,0 +1,13 @@
+name: Auto Labeler
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  pr-labeler:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: creatrip/pr-labeler@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          config-pathname: .github/auto-labeler.yml
