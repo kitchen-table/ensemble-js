@@ -10,6 +10,7 @@ import { normalizeCss, tooltipCss } from 'ui/styled/css';
 import FABProfile from 'ui/FAB/FABProfile';
 import UIStateStorage from 'storage/uiStateStorage';
 import { resolve, TYPE, wire } from 'di';
+import FABSettings from 'ui/FAB/FABSettings';
 
 class Fab {
   private static containerId = 'kitchen-table-fab-container';
@@ -92,6 +93,7 @@ const FabRoot = () => {
       columnChildren={
         <>
           <FABProfile />
+          <FABSettings />
           {/*<FABShare />*/}
           {/*<FABChatList />*/}
           <FABLeave />

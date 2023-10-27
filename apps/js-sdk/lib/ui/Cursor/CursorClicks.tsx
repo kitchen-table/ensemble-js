@@ -2,7 +2,6 @@ import Cursor, { CursorData } from 'ui/Cursor/index';
 import { keyframes } from '@emotion/css';
 import { useEffect } from 'preact/compat';
 import { useSignal } from '@preact/signals';
-import useCursors from 'ui/Cursor/useCursors';
 
 export default function CursorClicks() {
   return (
@@ -27,30 +26,18 @@ const minimize = keyframes`
 `;
 
 const CursorClick = ({ cursor }: { cursor: CursorData }) => {
-  const { deleteCursorClick } = useCursors();
   const fadeOutSignal = useSignal(1);
 
   useEffect(() => {
     fadeOutSignal.value = 2;
     const interval = setInterval(() => {
-      fadeOutSignal.value = fadeOutSignal.value * 0.8;
+      fadeOutSignal.value = fadeOutSignal.peek() * 0.8;
     }, 100);
 
     return () => {
       clearInterval(interval);
     };
   }, []);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      deleteCursorClick(cursor.id);
-    }, 2000);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
-
   return (
     <div
       style={{
