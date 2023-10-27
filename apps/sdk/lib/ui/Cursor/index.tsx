@@ -120,11 +120,11 @@ class Cursor {
     }, CURSOR_CLICK_DELETE_TIMEOUT);
   }
 
-  click(data: CursorData, isMyCursor: boolean) {
+  click(data: CursorData & { isMyCursor?: boolean }) {
     Cursor.cursorClickSignals.value = Cursor.cursorClickSignals.value.concat(data);
     this.scheduleDeleteCursorClick(data.id);
 
-    if (isMyCursor) {
+    if (data.isMyCursor) {
       return;
     }
     /**
