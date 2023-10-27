@@ -7,17 +7,17 @@ class Config {
     return loaderScript;
   }
 
-  getServerUrl() {
+  get serverUrl() {
     const url = this.findScript().getAttribute('data-url');
     invariant(url, 'url is required. add data-url attribute to script tag');
     return url;
   }
 
-  getIsActivateExperimental() {
+  get isActivateExperimental() {
     return this.findScript().getAttribute('data-experimental') === 'true';
   }
 
-  getMoveEventThrottleMs() {
+  get moveEventThrottleMs() {
     const customThrottle = this.findScript().getAttribute('data-move-event-throttle');
     if (!customThrottle || Number.isNaN(customThrottle)) {
       return 30; // as default
@@ -25,7 +25,7 @@ class Config {
     return Number(customThrottle);
   }
 
-  getRoomId() {
+  get roomId() {
     const roomId = this.findScript().getAttribute('data-room-id');
     const defaultRoomId = window.location.origin + window.location.pathname;
     return roomId ?? defaultRoomId;

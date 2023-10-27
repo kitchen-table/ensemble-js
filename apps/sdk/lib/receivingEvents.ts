@@ -60,40 +60,45 @@ class ReceivingEvents {
   }
 
   listenPointMove() {
-    this.api.listen(EventType.POINTER_MOVE, (data: PointerMoveOutput) => {
-      try {
-        const isMyEvent = this.myInfoStorage.isMyId(data.userId);
-        if (isMyEvent) {
-          return; // not my cursor
-        }
-        if (this.checkNeedToHide(data)) {
-          this.cursor.deleteCursor(data.userId);
-          return;
-        }
-        const cursorInfo = this.getCursorInfo(data);
-        this.cursor.moveCursor({ id: data.userId, ...cursorInfo });
-      } catch (e) {
-        this.cursor.deleteCursor(data.userId);
-        invariant.log(e);
+    const onCursorMove = this.handleHideCursor((data) => {
+      if (this.checkIsMyEvent(data.userId)) {
+        return; // exclude my cursor
       }
+      // Move event is need to update previous cursor position. So, we can use user id.
+      const id = data.userId;
+      this.cursor.moveCursor({ id, ...this.getCursorInfo(data) });
     });
+
+    this.api.listen(EventType.POINTER_MOVE, onCursorMove);
   }
 
   listenPointClick() {
-    this.api.listen(EventType.POINTER_CLICK, (data: PointerClickOutput) => {
+    const onCursorClick = this.handleHideCursor((data) => {
+      // Click event is no need to update cursor position. So, we can use random id.
+      const id = window.crypto.randomUUID();
+      const isMyCursor = this.checkIsMyEvent(data.userId);
+
+      this.cursor.click({ id, isMyCursor, ...this.getCursorInfo(data) });
+    });
+
+    this.api.listen(EventType.POINTER_CLICK, onCursorClick);
+  }
+
+  private handleHideCursor<R>(
+    handleCursorInfo: (data: PointerClickOutput | PointerMoveOutput) => R,
+  ) {
+    return (data: PointerClickOutput | PointerMoveOutput): R | void => {
       try {
         if (this.checkNeedToHide(data)) {
           this.cursor.deleteCursor(data.userId);
           return;
         }
-        const cursorInfo = this.getCursorInfo(data);
-        const isMyEvent = this.myInfoStorage.isMyId(data.userId);
-        this.cursor.click({ id: window.crypto.randomUUID(), ...cursorInfo }, isMyEvent);
+        return handleCursorInfo(data);
       } catch (e) {
         this.cursor.deleteCursor(data.userId);
         invariant.log(e);
       }
-    });
+    };
   }
 
   private getCursorInfo(data: PointerClickOutput | PointerMoveOutput) {
@@ -109,18 +114,23 @@ class ReceivingEvents {
     };
   }
 
+  private checkIsMyEvent(userId: string) {
+    return this.myInfoStorage.isMyId(userId);
+  }
+
   private checkNeedToHide(data: PointerClickOutput | PointerMoveOutput) {
-    if (data.element === ELEMENT_SELECTOR.HIDE) {
+    if (isHideElement(data.element)) {
       return true;
     }
-    const cursorUser = this.usersStorage.get(data.userId);
-    if (!cursorUser.path) {
-      return false;
+    const userPath = this.usersStorage.get(data.userId).path;
+    if (isEmptyUserPath(userPath)) {
+      return true;
     }
-    const myPath = parseUserPath(getMyPath());
-    const userPath = parseUserPath(cursorUser.path);
 
-    return !isSamePath(myPath, userPath);
+    if (isDifferentPathWithMine(userPath)) {
+      return true;
+    }
+    return false;
   }
 
   listenChatMessage() {
@@ -144,8 +154,7 @@ class ReceivingEvents {
   listenUpdateUserInfo() {
     this.api.listen(EventType.UPDATE_MY_INFO, (data: UpdateMyInfoOutput) => {
       try {
-        const isMyInfoUpdate = this.myInfoStorage.isMyId(data.myInfo.id);
-        if (isMyInfoUpdate) {
+        if (this.checkIsMyEvent(data.myInfo.id)) {
           this.myInfoStorage.save(data.myInfo);
           this.cursor.setUserCursor(data.myInfo.color);
         }
@@ -158,3 +167,18 @@ class ReceivingEvents {
 }
 
 export default ReceivingEvents;
+
+function isHideElement(elementSelector: string) {
+  return elementSelector === ELEMENT_SELECTOR.HIDE;
+}
+
+function isEmptyUserPath(path?: string): path is undefined {
+  return !path;
+}
+
+function isDifferentPathWithMine(path: string) {
+  const myPath = parseUserPath(getMyPath());
+  const userPath = parseUserPath(path);
+
+  return !isSamePath(myPath, userPath);
+}

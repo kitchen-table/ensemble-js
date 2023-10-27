@@ -50,8 +50,8 @@ class EnsembleJS {
     this.myInfoStorage.save(myInfo);
     this.cursor.setUserCursor(myInfo.color);
 
-    await this.api.getUserList({ roomId: this.config.getRoomId() });
-    this.api.joinRoom(this.config.getRoomId());
+    await this.api.getUserList({ roomId: this.config.roomId });
+    this.api.joinRoom(this.config.roomId);
   }
 
   private setEvents() {
@@ -79,7 +79,7 @@ class EnsembleJS {
   }
 
   cleanup() {
-    this.api?.leave({ roomId: this.config.getRoomId() });
+    this.api?.leave({ roomId: this.config.roomId });
     this.cursor.restoreUserCursor();
     this.sendingEvents.unregister();
     this.message.unbindNativeEventHandler();
