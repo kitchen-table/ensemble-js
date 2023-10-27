@@ -43,7 +43,7 @@ export default function Cursors() {
         return (
           <div
             key={cursor.id}
-            id={`kitchen-table-cursor-${cursor.id}`}
+            id={`ensemble-js-cursor-${cursor.id}`}
             style={{
               position: 'absolute',
               top: cursor.y - 7,

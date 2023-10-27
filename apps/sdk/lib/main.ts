@@ -1,6 +1,6 @@
 import { container, TYPE } from 'di';
 
-import KitchenTable from 'kitchenTable';
+import EnsembleJS from 'ensembleJS';
 import ChatStorage from 'storage/chatStorage';
 import MyInfoStorage from 'storage/myInfoStorage';
 import Api from 'api';
@@ -53,9 +53,9 @@ function containerBind() {
   }
 
   /**
-   * kitchenTable core
+   * EnsembleJS core
    */
-  container.bind<KitchenTable>(TYPE.KITCHEN_TABLE).to(KitchenTable).inSingletonScope();
+  container.bind<EnsembleJS>(TYPE.ENSEMBLE_JS).to(EnsembleJS).inSingletonScope();
 
   return {
     initUI,
@@ -66,8 +66,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const { initUI } = containerBind();
 
   initUI();
-  const kitchenTable = new KitchenTable();
-  kitchenTable.init().catch(console.error);
+  const ensembleJS = new EnsembleJS();
+  ensembleJS.init().catch(console.error);
   // @ts-ignore
-  window.kitchenTable = kitchenTable;
+  window.EnsembleJS = ensembleJS;
 });

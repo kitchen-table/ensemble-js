@@ -1,1 +1,1 @@
-import "@kitchen-table/js-sdk";
+import '@ensemble-js/sdk';

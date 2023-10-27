@@ -2,7 +2,7 @@ import invariant from 'ts-invariant';
 
 class Config {
   private findScript() {
-    const loaderScript = document.getElementById('kitchen-table-loader');
+    const loaderScript = document.getElementById('ensemble-js-loader');
     invariant(loaderScript, 'loaderScript is required');
     return loaderScript;
   }

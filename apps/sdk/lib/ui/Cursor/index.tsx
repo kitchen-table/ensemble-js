@@ -16,8 +16,8 @@ export type CursorData = {
 };
 
 class Cursor {
-  private static cursorStyleId = 'kitchen-table-cursor-style';
-  private static containerId = 'kitchen-table-cursors-container';
+  private static cursorStyleId = 'ensemble-js-cursor-style';
+  private static containerId = 'ensemble-js-cursors-container';
   static size = 28;
   static cursorSignals: Signal<CursorData[]> = signal([]);
   static cursorClickSignals: Signal<CursorData[]> = signal([]);
@@ -141,7 +141,7 @@ class Cursor {
           clientY: data.y,
         });
         // @ts-ignore
-        customEvent.isKitchenTableEvent = true;
+        customEvent.isEnsembleJSEvent = true;
         element.dispatchEvent(customEvent);
       }
     }
