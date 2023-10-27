@@ -3,11 +3,11 @@ import { resolve, TYPE } from 'di';
 import { BiExit } from 'react-icons/bi';
 
 export default function FABLeave() {
-  const getKitchenTable = resolve(TYPE.KITCHEN_TABLE);
+  const getEnsembleJS = resolve(TYPE.ENSEMBLE_JS);
 
   const confirmLeave = () => {
     if (confirm('Are you sure you want to leave?')) {
-      getKitchenTable().cleanup();
+      getEnsembleJS().cleanup();
     }
   };
 

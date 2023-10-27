@@ -32,7 +32,7 @@ class SendingEvents {
     };
     function emitPointerClickEvent(event: PointerEvent) {
       // @ts-ignore
-      if (event.isKitchenTableEvent) {
+      if (event.isEnsembleJSEvent) {
         return;
       }
       // ignore bubbled event

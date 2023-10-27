@@ -10,7 +10,7 @@ import { User } from '@packages/api';
 import invariant from 'ts-invariant';
 import Config from 'config';
 
-class KitchenTable {
+class EnsembleJS {
   api!: Api;
   fab!: Fab;
   config!: Config;
@@ -33,7 +33,7 @@ class KitchenTable {
 
   async init() {
     console.log(
-      '%c😀 Hi. Welcome to kitchen-table.\nThis is a kitchen table for Everyone who wants to talk with others into the same room. Enjoy!',
+      '%c😀 Hi. Welcome to Ensemble JS.\nThis is a solution for Everyone who wants to talk with others into the same place. Enjoy!',
       'display:block; background: black; width:100%; color: #bada55; padding:8px; font-size: 18px; margin: auto;',
     );
 
@@ -89,4 +89,4 @@ class KitchenTable {
   }
 }
 
-export default KitchenTable;
+export default EnsembleJS;

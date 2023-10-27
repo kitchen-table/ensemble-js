@@ -16,7 +16,7 @@ import * as path from 'path';
 const httpServer = createServer((req, res) => {
   // TODO temporary serving solution
   if (req.url === '/sdk.es.js') {
-    const sdkPath = path.resolve(process.cwd(), 'apps', 'js-sdk', 'dist', '@kitchen-table', 'js-sdk.es.js');
+    const sdkPath = path.resolve(process.cwd(), 'apps', 'sdk', 'dist', '@ensemble-js', 'sdk.es.js');
     fs.readFile(sdkPath, (err, data) => {
       res.writeHead(200, { 'Content-Type': 'text/javascript', 'Access-Control-Allow-Origin': '*' });
       res.write(data);

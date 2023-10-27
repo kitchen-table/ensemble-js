@@ -1,15 +1,15 @@
 {
-  "name": "@kitchen-table/js-sdk",
+  "name": "@ensemble-js/sdk",
   "private": true,
   "files": [
     "dist"
   ],
-  "main": "dist/@kitchen-table/js-sdk.umd.js",
-  "module": "dist/@kitchen-table/js-sdk.es.js",
+  "main": "dist/@ensemble-js/sdk.umd.js",
+  "module": "",
   "exports": {
     ".": {
-      "import": "./dist/@kitchen-table/js-sdk.es.js",
-      "require": "./dist/@kitchen-table/js-sdk.umd.js"
+      "import": "./dist/@ensemble-js/sdk.es.js",
+      "require": "./dist/@ensemble-js/sdk.umd.js"
     }
   },
   "scripts": {

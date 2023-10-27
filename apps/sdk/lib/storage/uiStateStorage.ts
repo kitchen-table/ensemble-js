@@ -16,7 +16,7 @@ class UIStateStorage extends BaseStorage<PersistUIState> {
   });
 
   constructor() {
-    super('kitchen-table-ui-state', localStorage);
+    super('ensemble-js-ui-state', localStorage);
     this.stateSignal.value = this.restoreData({
       FABOpenState: true,
     });

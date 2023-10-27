@@ -12,8 +12,8 @@ import { debounce } from 'utils/debounce';
 type EventKey = keyof WindowEventMap;
 
 class Message {
-  static containerId = 'kitchen-table-message-container';
-  static inputContainerId = 'kitchen-table-message-input-container';
+  static containerId = 'ensemble-js-message-container';
+  static inputContainerId = 'ensemble-js-message-input-container';
 
   static isVisibleSignal = signal(false);
   static messageSignal = signal('');

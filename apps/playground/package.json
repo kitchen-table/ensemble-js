@@ -1,10 +1,10 @@
 {
-  "name": "@kitchen-table/playground",
+  "name": "@ensemble-js/playground",
   "scripts": {
     "dev": "vite"
   },
   "devDependencies": {
-    "@kitchen-table/js-sdk": "workspace:*"
+    "@ensemble-js/sdk": "workspace:*"
   },
   "dependencies": {
     "vite": "^4.4.9"

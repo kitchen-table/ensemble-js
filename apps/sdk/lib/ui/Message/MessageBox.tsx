@@ -32,7 +32,7 @@ export default function MessageBox({ id, color }: { id: string; color: string })
   return (
     <span
       ref={messageRef}
-      id={`kitchen-table-cursor-message-${id}`}
+      id={`ensemble-js-cursor-message-${id}`}
       style={{
         display: 'inline-block',
         position: 'relative',

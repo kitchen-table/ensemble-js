@@ -23,7 +23,7 @@ export default function FABUsers() {
             aria-label={`${user.name}${suffix}\n${timeAgo(new Date(user.createdAt))}${userUrl}`}
             data-microtip-position="top-left"
             role="tooltip"
-            id={`kitchen-table-fab-user-profile-${user.id}`}
+            id={`ensemble-js-fab-user-profile-${user.id}`}
             isBackground={isBackground}
           >
             <UserIcon href={user.path} target="_self" color={user.color} style="cursor: pointer">

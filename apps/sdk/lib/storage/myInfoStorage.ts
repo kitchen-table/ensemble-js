@@ -9,7 +9,7 @@ class MyInfoStorage extends BaseStorage<MyInfo | null> {
   private myInfoSignal: Signal<MyInfo | null> = signal(null);
 
   constructor() {
-    super('kitchen-table-my-info', localStorage);
+    super('ensemble-js-my-info', localStorage);
 
     this.myInfoSignal.value = this.restoreData(null);
     effect(() => {

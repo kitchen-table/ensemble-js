@@ -1,5 +1,5 @@
 import { Container, createResolve, createWire, token } from '@owja/ioc';
-import KitchenTable from 'kitchenTable';
+import EnsembleJS from 'ensembleJS';
 import Api from 'api';
 import SendingEvents from 'sendingEvents';
 import ReceivingEvents from 'receivingEvents';
@@ -17,7 +17,7 @@ const wire = createWire(container);
 const resolve = createResolve(container);
 
 const TYPE = {
-  KITCHEN_TABLE: token<KitchenTable>('KitchenTable'),
+  ENSEMBLE_JS: token<EnsembleJS>('EnsembleJS'),
   API: token<Api>('Api'),
   CONFIG: token<Config>('Config'),
   FAB: token<Fab>('Fab'),

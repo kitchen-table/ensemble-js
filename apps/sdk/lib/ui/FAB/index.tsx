@@ -13,8 +13,8 @@ import { resolve, TYPE, wire } from 'di';
 import FABSettings from 'ui/FAB/FABSettings';
 
 class Fab {
-  private static containerId = 'kitchen-table-fab-container';
-  private static rootId = 'kitchen-table-fab-root';
+  private static containerId = 'ensemble-js-fab-container';
+  private static rootId = 'ensemble-js-fab-root';
 
   uiStateStorage!: UIStateStorage;
 

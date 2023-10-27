@@ -14,7 +14,7 @@ class ChatStorage extends BaseStorage<Chat[]> {
   messages = signal<Chat[]>([]);
 
   constructor() {
-    super('kitchen-table-message-list', sessionStorage);
+    super('ensemble-js-message-list', sessionStorage);
     this.messages.value = this.restoreData([]);
 
     effect(() => {
