@@ -42,4 +42,4 @@ jobs:
           aws s3 cp \
             --recursive \
             --region ap-northeast-2 \
-            apps/js-sdk/dist/@kitchen-table s3://cdn.ensemblejs.com
+            apps/sdk/dist/@ensemble-js s3://cdn.ensemblejs.com

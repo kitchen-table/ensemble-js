@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:8.0.32
+    restart: always
+    ports:
+      - '127.0.0.1:3306:3306'
+    environment:
+      - TZ=UTC
+      - MYSQL_USER=developer
+      - MYSQL_PASSWORD=123qwe
+      - MYSQL_ROOT_PASSWORD=123qwe
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
