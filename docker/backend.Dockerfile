@@ -3,7 +3,7 @@ FROM node:alpine as EXPORTER
 WORKDIR /app
 RUN apk update && yarn global add turbo
 COPY . .
-RUN turbo prune --scope @kitchen-table/backend --docker
+RUN turbo prune --scope @ensemble-js/backend --docker
 
 # ▼ Build application
 FROM node:alpine as BUILDER
@@ -19,7 +19,7 @@ RUN pnpm fetch
 
 COPY --from=EXPORTER /app/out/full/ .
 RUN pnpm install -r --offline --ignore-scripts
-RUN pnpm turbo run build --filter=@kitchen-table/backend
+RUN pnpm turbo run build --filter=@ensemble-js/backend
 
 # ▼ Run application
 FROM node:alpine as RUNNER

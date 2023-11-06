@@ -1,5 +1,5 @@
 {
-  "name": "@kitchen-table/backend",
+  "name": "@ensemble-js/backend",
   "scripts": {
     "build": "tsc",
     "start": "node dist/main.js",
