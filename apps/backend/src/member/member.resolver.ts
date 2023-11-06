@@ -1,5 +1,5 @@
 import { Query, Resolver } from 'type-graphql';
-import { Member } from '../domain/member';
+import { Member } from './member';
 
 @Resolver(() => Member)
 export class MemberResolver {

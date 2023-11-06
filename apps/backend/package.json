@@ -3,9 +3,11 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/main.js",
-    "dev": "nodemon src/main.ts"
+    "dev": "nodemon src/main.ts",
+    "knex": "npx knex --knexfile src/knexfile.ts"
   },
   "dependencies": {
+    "@creatrip/env-safe": "0.2.4",
     "@faker-js/faker": "8.1.0",
     "@fastify/cors": "8.4.1",
     "@packages/api": "*",
@@ -14,6 +16,7 @@
     "fastify-socket.io": "5.0.0",
     "knex": "3.0.1",
     "mercurius": "13.2.2",
+    "mysql2": "3.6.3",
     "pnpm": "8.10.2",
     "reflect-metadata": "0.1.13",
     "socket.io": "4.7.2",
