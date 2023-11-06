@@ -14,6 +14,20 @@ type Member {
   name: String!
 }
 
+type Mutation {
+  signIn(input: SignInInput!): Member!
+  signUp(input: SignUpInput!): Member!
+}
+
 type Query {
+  member(id: Int!): Member
   members: [Member!]!
+}
+
+input SignInInput {
+  email: String!
+}
+
+input SignUpInput {
+  email: String!
 }

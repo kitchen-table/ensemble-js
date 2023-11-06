@@ -3,12 +3,14 @@ import fastify from 'fastify';
 import cors from '@fastify/cors';
 import mercurius from 'mercurius';
 import fastifySocketIO from 'fastify-socket.io';
+import { NoSchemaIntrospectionCustomRule } from 'graphql';
 import { buildSchema } from 'type-graphql';
 import { MemberResolver } from './member/member.resolver';
 import { Server } from 'socket.io';
 import { Logger } from '@packages/logger';
 import { Connection } from './socket/connection';
 import { sdkController } from './sdk/sdk.controller';
+import { Env } from './env';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -23,7 +25,8 @@ async function main(): Promise<void> {
 
   // GraphQL
   await server.register(mercurius, {
-    graphiql: true,
+    graphiql: Env.graphqlPlaygroundEnabled,
+    validationRules: Env.graphqlPlaygroundEnabled ? [] : [NoSchemaIntrospectionCustomRule],
     schema: await buildSchema({
       emitSchemaFile: './schema.gql',
       resolvers: [MemberResolver],

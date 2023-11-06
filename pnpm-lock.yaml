@@ -41,6 +41,9 @@ importers:
       fastify-socket.io:
         specifier: 5.0.0
         version: 5.0.0(fastify@4.24.3)
+      graphql:
+        specifier: 16.8.1
+        version: 16.8.1
       knex:
         specifier: 3.0.1
         version: 3.0.1(mysql2@3.6.3)

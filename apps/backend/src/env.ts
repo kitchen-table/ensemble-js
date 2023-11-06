@@ -1,7 +1,11 @@
 import { EnvKey, EnvSafe } from '@creatrip/env-safe';
+import { join } from 'path';
 
-@EnvSafe({ path: '../.env' })
+@EnvSafe({ path: join(__dirname, '..', '.env') })
 export class Env {
+  @EnvKey({ default: 'local' })
+  static readonly Environment: 'local' | 'development' | 'staging' | 'production';
+
   @EnvKey({ default: '127.0.0.1' })
   static readonly MYSQL_HOST: string;
 
@@ -16,4 +20,8 @@ export class Env {
 
   @EnvKey({ default: 'ensemblejs' })
   static readonly MYSQL_DATABASE: string;
+
+  static get graphqlPlaygroundEnabled(): boolean {
+    return Env.Environment !== 'production';
+  }
 }
